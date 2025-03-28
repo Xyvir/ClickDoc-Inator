@@ -23,8 +23,64 @@ namespace Better_Steps_Recorder
             activityTimer.Interval = ActivityDelay;
             activityTimer.Tick += activityTimer_Tick;
 
+            // Add the Click event handler for pictureBox1
+            pictureBox1.Click += pictureBox1_Click;
+
 
         }
+        private void pictureBox1_Click(object sender, EventArgs e)
+        {
+            if (!Program.IsRecording)
+            {
+                // Get the mouse click coordinates relative to the PictureBox
+                MouseEventArgs me = (MouseEventArgs)e;
+                int x = me.X;
+                int y = me.Y;
+
+                if (pictureBox1.Image != null)
+                {
+                    // Calculate the scaling factors
+                    float scaleX = (float)pictureBox1.Image.Width / pictureBox1.ClientSize.Width;
+                    float scaleY = (float)pictureBox1.Image.Height / pictureBox1.ClientSize.Height;
+
+                    // Adjust the click coordinates based on the scaling factors
+                    int adjustedX = (int)(x * scaleX);
+                    int adjustedY = (int)(y * scaleY);
+
+                    if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
+                    {
+                        // Update the mouse coordinates of the selected event
+                        selectedEvent.MouseCoordinates = new WindowHelper.POINT { X = adjustedX, Y = adjustedY };
+
+                        // Reload the step's image from the BSR file
+                        if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64))
+                        {
+                            try
+                            {
+                                byte[] imageBytes = Convert.FromBase64String(selectedEvent.Screenshotb64);
+                                using (MemoryStream ms = new MemoryStream(imageBytes))
+                                {
+                                    pictureBox1.Image = new Bitmap(ms);
+                                }
+
+                                // Draw crosshairs at the new mouse coordinates
+                                DrawCrosshairs(pictureBox1, adjustedX, adjustedY);
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Failed to load image from Base64 string: {ex.Message}");
+                                pictureBox1.Image = null;
+                            }
+                        }
+
+                        // Refresh the PropertyGrid to show the updated coordinates
+                        propertyGrid_RecordEvent.SelectedObject = null;
+                        propertyGrid_RecordEvent.SelectedObject = selectedEvent;
+                    }
+                }
+            }
+        }
+
         private void DrawCrosshairs(PictureBox pictureBox, int x, int y)
         {
             if (pictureBox.Image == null)
