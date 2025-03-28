@@ -39,13 +39,32 @@ namespace Better_Steps_Recorder
 
                 if (pictureBox1.Image != null)
                 {
-                    // Calculate the scaling factors
-                    float scaleX = (float)pictureBox1.Image.Width / pictureBox1.ClientSize.Width;
-                    float scaleY = (float)pictureBox1.Image.Height / pictureBox1.ClientSize.Height;
+                    // Calculate the aspect ratios
+                    float imageAspectRatio = (float)pictureBox1.Image.Width / pictureBox1.Image.Height;
+                    float pictureBoxAspectRatio = (float)pictureBox1.ClientSize.Width / pictureBox1.ClientSize.Height;
 
-                    // Adjust the click coordinates based on the scaling factors
-                    int adjustedX = (int)(x * scaleX);
-                    int adjustedY = (int)(y * scaleY);
+                    // Calculate the actual displayed size of the image within the PictureBox
+                    int displayedWidth, displayedHeight;
+                    if (imageAspectRatio > pictureBoxAspectRatio)
+                    {
+                        // Image is wider than the PictureBox
+                        displayedWidth = pictureBox1.ClientSize.Width;
+                        displayedHeight = (int)(pictureBox1.ClientSize.Width / imageAspectRatio);
+                    }
+                    else
+                    {
+                        // Image is taller than the PictureBox
+                        displayedWidth = (int)(pictureBox1.ClientSize.Height * imageAspectRatio);
+                        displayedHeight = pictureBox1.ClientSize.Height;
+                    }
+
+                    // Calculate the offsets if the image is centered within the PictureBox
+                    int offsetX = (pictureBox1.ClientSize.Width - displayedWidth) / 2;
+                    int offsetY = (pictureBox1.ClientSize.Height - displayedHeight) / 2;
+
+                    // Adjust the click coordinates based on the displayed size and offsets
+                    int adjustedX = (int)((x - offsetX) * ((float)pictureBox1.Image.Width / displayedWidth));
+                    int adjustedY = (int)((y - offsetY) * ((float)pictureBox1.Image.Height / displayedHeight));
 
                     if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
                     {

@@ -343,13 +343,13 @@ namespace Better_Steps_Recorder
                             using (Image image = Image.FromStream(ms))
                             {
                                 // Scale the image if necessary to fit the page width
-                                float maxWidth = 500; // Adjust as needed
-                                float scaleFactor = Math.Min(maxWidth / image.Width, 1);
-                                int scaledWidth = (int)(image.Width * scaleFactor);
-                                int scaledHeight = (int)(image.Height * scaleFactor);
+                                //float maxWidth = 500; // Adjust as needed
+                                //float scaleFactor = Math.Min(maxWidth / image.Width, 1);
+                                //int scaledWidth = (int)(image.Width * scaleFactor);
+                                //int scaledHeight = (int)(image.Height * scaleFactor);
 
                                 // Convert the image to a byte array in RTF format
-                                string rtfImage = GetRtfImage(image, scaledWidth, scaledHeight);
+                                string rtfImage = GetRtfImage(image, recordEvent.MouseCoordinates.X, recordEvent.MouseCoordinates.Y);
 
                                 // Insert the image into the document
                                 writer.WriteLine(rtfImage);
@@ -394,8 +394,8 @@ namespace Better_Steps_Recorder
                 int cropY = cursorY - cropHeight / 2;
 
                 // Adjust crop area to ensure it doesn't bleed outside the window bounds
-                cropX = Math.Max(0, Math.Min(cropX, windowWidth - cropWidth));
-                cropY = Math.Max(0, Math.Min(cropY, windowHeight - cropHeight));
+                //cropX = Math.Max(0, Math.Min(cropX, windowWidth - cropWidth));
+                //cropY = Math.Max(0, Math.Min(cropY, windowHeight - cropHeight));
 
                 Rectangle cropRect = new Rectangle(cropX, cropY, cropWidth, cropHeight);
 
