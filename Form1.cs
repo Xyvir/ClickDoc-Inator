@@ -248,8 +248,12 @@ namespace Better_Steps_Recorder
                 Program._linkHeading.SpoilerTitle = "Example Spoiler Title";
                 Program._linkHeading.SpoilerText = "Example Spoiler Text";
 
-
+                // Enable the edit hyperlink heading menu item
+                editHyperlinkHeadingToolStripMenuItem.Enabled = true;
+                toolStripMenuItem1_SaveAs.Enabled = true;
+            }
         }
+
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -267,9 +271,11 @@ namespace Better_Steps_Recorder
                 Program.zip = new ZipFileHandler(zipFilePath);
                 Program.LoadRecordEventsFromFile(zipFilePath);
                 EnableDisable_exportToolStripMenuItem();
+
+                // Enable the edit hyperlink heading menu item
+                editHyperlinkHeadingToolStripMenuItem.Enabled = true;
+                toolStripMenuItem1_SaveAs.Enabled = true;
             }
-
-
         }
 
         private void richTextBox_stepText_TextChanged(object sender, EventArgs e)
@@ -330,15 +336,16 @@ namespace Better_Steps_Recorder
             {
                 exportToolStripMenuItem.Enabled = true;
                 exportToolMDStripMenuItem.Enabled = true;
-                toolStripMenuItem1_SaveAs.Enabled = true;
-                editHyperlinkHeadingToolStripMenuItem.Enabled = true;
+                
+                
             }
             else
             {
+                
                 exportToolStripMenuItem.Enabled = false;
                 exportToolMDStripMenuItem.Enabled = false;
-                toolStripMenuItem1_SaveAs.Enabled = false;
-                editHyperlinkHeadingToolStripMenuItem.Enabled = false;
+                
+                
             }
 
         }
