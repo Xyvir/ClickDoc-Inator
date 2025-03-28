@@ -9,3 +9,7 @@ The "ClickDocInator" is a modern alternative to the now-deprecated PSR.exe tool,
 - Feel free to view and build from source if you have any cyber concerns.
 
 ```
+
+## Developing
+1. Clone Repo
+2. Open .csproj in VisualStudio 2022 to start vibe-coding and building.
