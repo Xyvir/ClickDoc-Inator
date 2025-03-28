@@ -311,12 +311,14 @@ namespace Better_Steps_Recorder
             if (Listbox_Events.Items.Count > 0)
             {
                 exportToolStripMenuItem.Enabled = true;
+                exportToolMDStripMenuItem.Enabled = true;
                 toolStripMenuItem1_SaveAs.Enabled = true;
             }
             else
             {
                 exportToolStripMenuItem.Enabled = false;
-                toolStripMenuItem1_SaveAs.Enabled = true;
+                exportToolMDStripMenuItem.Enabled = false;
+                toolStripMenuItem1_SaveAs.Enabled = false;
             }
 
         }
@@ -336,29 +338,35 @@ namespace Better_Steps_Recorder
                 if (saveFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     string docPath = saveFileDialog.FileName;
-                    Program.ExportToRTF(docPath);
+                    Program.ExportDoc(docPath, "RTF");
                 }
             }
         }
 
         private void exportToolMDStripMenuItem_Click(object sender, EventArgs e)
         {
-            //Program.zip?.SaveToZip();
-          
-            //using (SaveFileDialog saveFileDialog = new SaveFileDialog())
-            //{
-            //    saveFileDialog.Filter = "Rich Text Format|*.rtf";
-            //    saveFileDialog.Title = "Export to RTF Document";
-            //    if (Program.zip?.zipFilePath != null)
-            //    {
-            //        saveFileDialog.FileName = Path.GetFileNameWithoutExtension(Program.zip.zipFilePath) + ".rtf";
-            //    }
-            //    if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            //    {
-            //        string docPath = saveFileDialog.FileName;
-            //        Program.ExportToRTF(docPath);
-            //    }
-            //}
+            // Use FolderBrowserDialog to select a folder
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            {
+                folderBrowserDialog.Description = "Select the folder to save the Markdown document";
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string folderPath = folderBrowserDialog.SelectedPath;
+                    if (!string.IsNullOrEmpty(folderPath))
+                    {
+                        // Generate the Markdown file path
+                        string fileName = "ExportedDocument.md";
+                        if (Program.zip?.zipFilePath != null)
+                        {
+                            fileName = Path.GetFileNameWithoutExtension(Program.zip.zipFilePath) + ".md";
+                        }
+                        string docPath = Path.Combine(folderPath, fileName);
+
+                        // Export to Markdown
+                        Program.ExportDoc(docPath, "MD");
+                    }
+                }
+            }
         }
 
 

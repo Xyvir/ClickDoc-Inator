@@ -154,7 +154,7 @@ namespace Better_Steps_Recorder
                         // Get ApplicationName
                         string? applicationName=WindowHelper.GetApplicationName(hwnd);
 
-                        // Get UI Elelment coordinates and size
+                        // Get UI Element coordinates and size
                         WindowHelper.GetWindowRect(hwnd, out WindowHelper.RECT UIrect);
                         int UIWidth = UIrect.Right - UIrect.Left;
                         int UIHeight = UIrect.Bottom - UIrect.Top;
@@ -203,6 +203,7 @@ namespace Better_Steps_Recorder
                                 UIElement = element,
                                 ElementName= elementName,
                                 ElementType= elementType,
+                                OGMouseCoordinates = new WindowHelper.POINT { X = cursorPos.X, Y = cursorPos.Y },
                                 MouseCoordinates = new WindowHelper.POINT { X = cursorPos.X, Y = cursorPos.Y },
                                 EventType = clickType,
                                 //TODO Make this work with timed linstening event
@@ -293,7 +294,7 @@ namespace Better_Steps_Recorder
 
 
 
-    public static void ExportToRTF(string docPath)
+    public static void ExportDoc(string docPath, string kind)
     {
         try
         {
@@ -346,6 +347,10 @@ namespace Better_Steps_Recorder
                 writer.WriteLine("}");
             }
 
+
+
+
+
             System.Windows.Forms.MessageBox.Show("Export completed successfully.", "Export to RTF", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (IOException ioEx)
@@ -357,6 +362,7 @@ namespace Better_Steps_Recorder
             System.Windows.Forms.MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
+
 
         private static string GetRtfImage(Image image, int cursorX, int cursorY)
         {
@@ -421,6 +427,8 @@ namespace Better_Steps_Recorder
                 }
             }
         }
+
+
 
 
 
