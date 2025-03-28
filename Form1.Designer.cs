@@ -47,8 +47,8 @@
             openToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem1_SaveAs = new ToolStripMenuItem();
             toolStripSeparator1 = new ToolStripSeparator();
-            editHyperlinkHeadingToolStripMenuItem = new ToolStripMenuItem(); // New menu item
-            toolStripSeparator2 = new ToolStripSeparator(); // New separator
+            editHyperlinkHeadingToolStripMenuItem = new ToolStripMenuItem(); 
+            toolStripSeparator2 = new ToolStripSeparator(); 
             exportToolStripMenuItem = new ToolStripMenuItem();
             exportToolMDStripMenuItem = new ToolStripMenuItem();
             ToolStripMenuItem_Recording = new ToolStripMenuItem();
@@ -267,7 +267,9 @@
             toolStripSeparator1.Size = new Size(224, 6);
             // 
             // editHyperlinkHeadingToolStripMenuItem
-            // 
+            //
+            //
+            editHyperlinkHeadingToolStripMenuItem.Enabled = false;
             editHyperlinkHeadingToolStripMenuItem.Name = "editHyperlinkHeadingToolStripMenuItem";
             editHyperlinkHeadingToolStripMenuItem.Size = new Size(227, 26);
             editHyperlinkHeadingToolStripMenuItem.Text = "Edit Hyperlink Heading";

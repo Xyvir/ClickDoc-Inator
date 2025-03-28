@@ -171,7 +171,7 @@ namespace Better_Steps_Recorder
             //Call savetozip here
             Program.zip?.SaveToZip();
 
-            //this.DialogResult = DialogResult.OK;
+            this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

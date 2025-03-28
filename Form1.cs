@@ -35,7 +35,7 @@ namespace Better_Steps_Recorder
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     // Changes were saved
-                    MessageBox.Show("Hyperlink heading updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show("Hyperlink heading updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -242,13 +242,13 @@ namespace Better_Steps_Recorder
                 propertyGrid_RecordEvent.SelectedObject = null;
                 pictureBox1.Image = null;
                 richTextBox_stepText.Text = null;
-
                 // Clear the additional attributes
-                Program._linkHeading.HyperlinkURL = null;
-                Program._linkHeading.HyperlinkText = string.Empty;
-                Program._linkHeading.SpoilerTitle = string.Empty;
-                Program._linkHeading.SpoilerText = string.Empty;
-            }
+                Program._linkHeading.HyperlinkURL = new Uri("https://www.example.com/");
+                Program._linkHeading.HyperlinkText = "Example Hyperlink Text";
+                Program._linkHeading.SpoilerTitle = "Example Spoiler Title";
+                Program._linkHeading.SpoilerText = "Example Spoiler Text";
+
+
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -331,12 +331,14 @@ namespace Better_Steps_Recorder
                 exportToolStripMenuItem.Enabled = true;
                 exportToolMDStripMenuItem.Enabled = true;
                 toolStripMenuItem1_SaveAs.Enabled = true;
+                editHyperlinkHeadingToolStripMenuItem.Enabled = true;
             }
             else
             {
                 exportToolStripMenuItem.Enabled = false;
                 exportToolMDStripMenuItem.Enabled = false;
                 toolStripMenuItem1_SaveAs.Enabled = false;
+                editHyperlinkHeadingToolStripMenuItem.Enabled = false;
             }
 
         }
