@@ -169,11 +169,20 @@ namespace Better_Steps_Recorder
                         AutomationElement? element = GetElementFromCursor(new System.Windows.Point(cursorPos.X, cursorPos.Y));
                         string? elementName = null;
                         string? elementType = null;
+                        string? tooltipText = null;
                         if (element != null)
                         {
                             elementName = element.Current.Name;
                             elementType = element.Current.LocalizedControlType;
                         }
+
+                        // Get the tooltip text if available DOESN'T WORK
+                        //AutomationElement? tooltipElement = element.FindFirst(TreeScope.Subtree, new PropertyCondition(AutomationElement.ControlTypeProperty, ControlType.ToolTip));
+                        //if (tooltipElement != null)
+                        //{
+                        //    tooltipText = tooltipElement.Current.Name;
+                        //}
+
                         // Determine click type
                         string clickType = WindowHelper.MouseMessages.WM_LBUTTONDOWN == (WindowHelper.MouseMessages)wParam ? "Left Click" : "Right Click";
 
@@ -196,6 +205,8 @@ namespace Better_Steps_Recorder
                                 ElementType= elementType,
                                 MouseCoordinates = new WindowHelper.POINT { X = cursorPos.X, Y = cursorPos.Y },
                                 EventType = clickType,
+                                //TODO Make this work with timed linstening event
+                                TooltipText = tooltipText,
                                 _StepText = $"In {applicationName}, {clickType} on  {elementType} {elementName}",
                                 Step = _recordEvents.Count + 1
                             };
@@ -237,37 +248,6 @@ namespace Better_Steps_Recorder
             {
                 // Handle the specific COM exception that may occur
                 Console.WriteLine($"COM Exception: {ex.Message}");
-                return null;
-            }
-        }
-
-        private static string? SaveWindowScreenshot(IntPtr hwnd, int eventId)
-        {
-            try
-            {
-                WindowHelper.RECT rect = WindowHelper.GetTopLevelWindowRect(hwnd);
-                int width = rect.Right - rect.Left;
-                int height = rect.Bottom - rect.Top;
-
-                Bitmap bmp = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-                Graphics gfxBmp = Graphics.FromImage(bmp);
-                IntPtr hdcBitmap = gfxBmp.GetHdc();
-                IntPtr hdcWindow = WindowHelper.GetWindowDC(hwnd);
-
-                WindowHelper.BitBlt(hdcBitmap, 0, 0, width, height, hdcWindow, 0, 0, WindowHelper.SRCCOPY);
-                gfxBmp.ReleaseHdc(hdcBitmap);
-                gfxBmp.Dispose();
-                WindowHelper.ReleaseDC(hwnd, hdcWindow);
-
-                string screenshotPath = $"screenshot_{eventId}.png";
-                bmp.Save(screenshotPath, ImageFormat.Png);
-                bmp.Dispose();
-
-                return screenshotPath;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Failed to capture screenshot: {ex.Message}");
                 return null;
             }
         }

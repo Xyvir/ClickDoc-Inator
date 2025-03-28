@@ -35,6 +35,7 @@ namespace Better_Steps_Recorder
         [JsonIgnore] 
         public AutomationElement? UIElement { get; set; }
         public WindowHelper.POINT MouseCoordinates { get; set; }
+        public string? TooltipText { get; set; }
         public string? EventType { get; set; }
         public string? Screenshotb64 { get; set; }
 
