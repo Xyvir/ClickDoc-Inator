@@ -28,6 +28,18 @@ namespace Better_Steps_Recorder
 
 
         }
+        private void editHyperlinkHeadingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new EditHyperlinkHeadingForm())
+            {
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    // Changes were saved
+                    MessageBox.Show("Hyperlink heading updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             if (!Program.IsRecording)

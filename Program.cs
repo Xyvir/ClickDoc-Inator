@@ -29,11 +29,14 @@ namespace Better_Steps_Recorder
         private static IntPtr _hookID = IntPtr.Zero;
         private static LowLevelMouseProc _proc = HookCallback;
         public static List<RecordEvent> _recordEvents = new List<RecordEvent>();
+
         private static Form1? _form1Instance;
         public static int EventCounter = 1;
         public static bool IsRecording = false;
 
-       
+        public static LinkHeading _linkHeading = new LinkHeading();
+
+
 
         [STAThread]
         static void Main()
