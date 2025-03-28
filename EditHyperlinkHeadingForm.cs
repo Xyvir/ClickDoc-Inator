@@ -24,125 +24,131 @@ namespace Better_Steps_Recorder
 
         private void InitializeComponent()
         {
-            this.textBoxHyperlinkURL = new TextBox();
-            this.textBoxHyperlinkText = new TextBox();
-            this.textBoxSpoilerTitle = new TextBox();
-            this.textBoxSpoilerText = new TextBox();
-            this.buttonSave = new Button();
-            this.buttonCancel = new Button();
-            this.labelHyperlinkURL = new Label();
-            this.labelHyperlinkText = new Label();
-            this.labelSpoilerTitle = new Label();
-            this.labelSpoilerText = new Label();
-            this.SuspendLayout();
-            // 
-            // labelHyperlinkURL
-            // 
-            this.labelHyperlinkURL.AutoSize = true;
-            this.labelHyperlinkURL.Location = new Point(12, 12);
-            this.labelHyperlinkURL.Name = "labelHyperlinkURL";
-            this.labelHyperlinkURL.Size = new Size(85, 15);
-            this.labelHyperlinkURL.TabIndex = 6;
-            this.labelHyperlinkURL.Text = "Hyperlink URL:";
+            textBoxHyperlinkURL = new TextBox();
+            textBoxHyperlinkText = new TextBox();
+            textBoxSpoilerTitle = new TextBox();
+            textBoxSpoilerText = new TextBox();
+            buttonSave = new Button();
+            buttonCancel = new Button();
+            labelHyperlinkURL = new Label();
+            labelHyperlinkText = new Label();
+            labelSpoilerTitle = new Label();
+            labelSpoilerText = new Label();
+            SuspendLayout();
             // 
             // textBoxHyperlinkURL
             // 
-            this.textBoxHyperlinkURL.Location = new Point(12, 30);
-            this.textBoxHyperlinkURL.Name = "textBoxHyperlinkURL";
-            this.textBoxHyperlinkURL.Size = new Size(360, 23);
-            this.textBoxHyperlinkURL.TabIndex = 0;
-            // 
-            // labelHyperlinkText
-            // 
-            this.labelHyperlinkText.AutoSize = true;
-            this.labelHyperlinkText.Location = new Point(12, 56);
-            this.labelHyperlinkText.Name = "labelHyperlinkText";
-            this.labelHyperlinkText.Size = new Size(82, 15);
-            this.labelHyperlinkText.TabIndex = 7;
-            this.labelHyperlinkText.Text = "Hyperlink Text:";
+            textBoxHyperlinkURL.Location = new Point(14, 40);
+            textBoxHyperlinkURL.Margin = new Padding(3, 4, 3, 4);
+            textBoxHyperlinkURL.Name = "textBoxHyperlinkURL";
+            textBoxHyperlinkURL.Size = new Size(511, 27);
+            textBoxHyperlinkURL.TabIndex = 0;
             // 
             // textBoxHyperlinkText
             // 
-            this.textBoxHyperlinkText.Location = new Point(12, 74);
-            this.textBoxHyperlinkText.Name = "textBoxHyperlinkText";
-            this.textBoxHyperlinkText.Size = new Size(360, 23);
-            this.textBoxHyperlinkText.TabIndex = 1;
-            // 
-            // labelSpoilerTitle
-            // 
-            this.labelSpoilerTitle.AutoSize = true;
-            this.labelSpoilerTitle.Location = new Point(12, 100);
-            this.labelSpoilerTitle.Name = "labelSpoilerTitle";
-            this.labelSpoilerTitle.Size = new Size(70, 15);
-            this.labelSpoilerTitle.TabIndex = 8;
-            this.labelSpoilerTitle.Text = "Spoiler Title:";
+            textBoxHyperlinkText.Location = new Point(14, 99);
+            textBoxHyperlinkText.Margin = new Padding(3, 4, 3, 4);
+            textBoxHyperlinkText.Name = "textBoxHyperlinkText";
+            textBoxHyperlinkText.Size = new Size(511, 27);
+            textBoxHyperlinkText.TabIndex = 1;
             // 
             // textBoxSpoilerTitle
             // 
-            this.textBoxSpoilerTitle.Location = new Point(12, 118);
-            this.textBoxSpoilerTitle.Name = "textBoxSpoilerTitle";
-            this.textBoxSpoilerTitle.Size = new Size(360, 23);
-            this.textBoxSpoilerTitle.TabIndex = 2;
-            // 
-            // labelSpoilerText
-            // 
-            this.labelSpoilerText.AutoSize = true;
-            this.labelSpoilerText.Location = new Point(12, 144);
-            this.labelSpoilerText.Name = "labelSpoilerText";
-            this.labelSpoilerText.Size = new Size(70, 15);
-            this.labelSpoilerText.TabIndex = 9;
-            this.labelSpoilerText.Text = "Spoiler Text:";
+            textBoxSpoilerTitle.Location = new Point(14, 157);
+            textBoxSpoilerTitle.Margin = new Padding(3, 4, 3, 4);
+            textBoxSpoilerTitle.Name = "textBoxSpoilerTitle";
+            textBoxSpoilerTitle.Size = new Size(511, 27);
+            textBoxSpoilerTitle.TabIndex = 2;
             // 
             // textBoxSpoilerText
             // 
-            this.textBoxSpoilerText.Location = new Point(12, 162);
-            this.textBoxSpoilerText.Multiline = true;
-            this.textBoxSpoilerText.Name = "textBoxSpoilerText";
-            this.textBoxSpoilerText.Size = new Size(360, 150);
-            this.textBoxSpoilerText.TabIndex = 3;
+            textBoxSpoilerText.Location = new Point(14, 216);
+            textBoxSpoilerText.Margin = new Padding(3, 4, 3, 4);
+            textBoxSpoilerText.Multiline = true;
+            textBoxSpoilerText.Name = "textBoxSpoilerText";
+            textBoxSpoilerText.ScrollBars = ScrollBars.Vertical;
+            textBoxSpoilerText.Size = new Size(511, 199);
+            textBoxSpoilerText.TabIndex = 3;
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new Point(216, 318);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new Size(75, 23);
-            this.buttonSave.TabIndex = 4;
-            this.buttonSave.Text = "Save";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new EventHandler(this.buttonSave_Click);
+            buttonSave.Location = new Point(109, 424);
+            buttonSave.Margin = new Padding(3, 4, 3, 4);
+            buttonSave.Name = "buttonSave";
+            buttonSave.Size = new Size(86, 31);
+            buttonSave.TabIndex = 4;
+            buttonSave.Text = "Save";
+            buttonSave.UseVisualStyleBackColor = true;
+            buttonSave.Click += buttonSave_Click;
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Location = new Point(297, 318);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new Size(75, 23);
-            this.buttonCancel.TabIndex = 5;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new EventHandler(this.buttonCancel_Click);
+            buttonCancel.Location = new Point(339, 424);
+            buttonCancel.Margin = new Padding(3, 4, 3, 4);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(86, 31);
+            buttonCancel.TabIndex = 5;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
             // 
-            // EditHyperlinkHeading
+            // labelHyperlinkURL
             // 
-            this.AutoScaleDimensions = new SizeF(7F, 15F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(384, 353);
-            this.Controls.Add(this.labelSpoilerText);
-            this.Controls.Add(this.labelSpoilerTitle);
-            this.Controls.Add(this.labelHyperlinkText);
-            this.Controls.Add(this.labelHyperlinkURL);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonSave);
-            this.Controls.Add(this.textBoxSpoilerText);
-            this.Controls.Add(this.textBoxSpoilerTitle);
-            this.Controls.Add(this.textBoxHyperlinkText);
-            this.Controls.Add(this.textBoxHyperlinkURL);
-            this.Name = "EditHyperlinkHeading";
-            this.Text = "Edit Hyperlink Heading";
-
-            // To this line
-            this.Load += new EventHandler(this.EditHyperlinkHeadingForm_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            labelHyperlinkURL.AutoSize = true;
+            labelHyperlinkURL.Location = new Point(14, 16);
+            labelHyperlinkURL.Name = "labelHyperlinkURL";
+            labelHyperlinkURL.Size = new Size(105, 20);
+            labelHyperlinkURL.TabIndex = 6;
+            labelHyperlinkURL.Text = "Hyperlink URL:";
+            // 
+            // labelHyperlinkText
+            // 
+            labelHyperlinkText.AutoSize = true;
+            labelHyperlinkText.Location = new Point(14, 75);
+            labelHyperlinkText.Name = "labelHyperlinkText";
+            labelHyperlinkText.Size = new Size(106, 20);
+            labelHyperlinkText.TabIndex = 7;
+            labelHyperlinkText.Text = "Hyperlink Text:";
+            // 
+            // labelSpoilerTitle
+            // 
+            labelSpoilerTitle.AutoSize = true;
+            labelSpoilerTitle.Location = new Point(14, 133);
+            labelSpoilerTitle.Name = "labelSpoilerTitle";
+            labelSpoilerTitle.Size = new Size(92, 20);
+            labelSpoilerTitle.TabIndex = 8;
+            labelSpoilerTitle.Text = "Spoiler Title:";
+            // 
+            // labelSpoilerText
+            // 
+            labelSpoilerText.AutoSize = true;
+            labelSpoilerText.Location = new Point(14, 192);
+            labelSpoilerText.Name = "labelSpoilerText";
+            labelSpoilerText.Size = new Size(90, 20);
+            labelSpoilerText.TabIndex = 9;
+            labelSpoilerText.Text = "Spoiler Text:";
+            // 
+            // EditHyperlinkHeadingForm
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(539, 471);
+            Controls.Add(labelSpoilerText);
+            Controls.Add(labelSpoilerTitle);
+            Controls.Add(labelHyperlinkText);
+            Controls.Add(labelHyperlinkURL);
+            Controls.Add(buttonCancel);
+            Controls.Add(buttonSave);
+            Controls.Add(textBoxSpoilerText);
+            Controls.Add(textBoxSpoilerTitle);
+            Controls.Add(textBoxHyperlinkText);
+            Controls.Add(textBoxHyperlinkURL);
+            Margin = new Padding(3, 4, 3, 4);
+            Name = "EditHyperlinkHeadingForm";
+            Text = "Edit Hyperlink Heading";
+            Load += EditHyperlinkHeadingForm_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         private void EditHyperlinkHeadingForm_Load(object sender, EventArgs e)
@@ -162,7 +168,10 @@ namespace Better_Steps_Recorder
             Program._linkHeading.SpoilerTitle = textBoxSpoilerTitle.Text;
             Program._linkHeading.SpoilerText = textBoxSpoilerText.Text;
 
-            this.DialogResult = DialogResult.OK;
+            //Call savetozip here
+            Program.zip?.SaveToZip();
+
+            //this.DialogResult = DialogResult.OK;
             this.Close();
         }
 

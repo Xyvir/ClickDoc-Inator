@@ -71,10 +71,36 @@ namespace Better_Steps_Recorder
                     {
                         _recordEvents = new List<RecordEvent>();
                         _form1Instance?.Invoke((Action)(() => _form1Instance.ClearListBox()));
+
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
-                            if (Path.GetDirectoryName(entry.FullName) == "events" && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                            if (entry.FullName == "additional_attributes.json")
                             {
+                                // Load additional attributes if the entry exists
+                                try
+                                {
+                                    using (StreamReader reader = new StreamReader(entry.Open()))
+                                    {
+                                        string jsonContent = reader.ReadToEnd();
+                                        var additionalAttributes = JsonSerializer.Deserialize<AdditionalAttributes>(jsonContent);
+
+                                        if (additionalAttributes != null)
+                                        {
+                                            Program._linkHeading.HyperlinkURL = new Uri(additionalAttributes.HyperlinkURL);
+                                            Program._linkHeading.HyperlinkText = additionalAttributes.HyperlinkText;
+                                            Program._linkHeading.SpoilerTitle = additionalAttributes.SpoilerTitle;
+                                            Program._linkHeading.SpoilerText = additionalAttributes.SpoilerText;
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"Failed to load additional attributes: {ex.Message}");
+                                }
+                            }
+                            else if (Path.GetDirectoryName(entry.FullName) == "events" && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                            {
+                                // Load record events
                                 using (StreamReader reader = new StreamReader(entry.Open()))
                                 {
                                     string jsonContent = reader.ReadToEnd();
@@ -481,5 +507,12 @@ namespace Better_Steps_Recorder
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr SetWindowsHookEx(int idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
+    }
+    public class AdditionalAttributes
+    {
+        public string HyperlinkURL { get; set; }
+        public string HyperlinkText { get; set; }
+        public string SpoilerTitle { get; set; }
+        public string SpoilerText { get; set; }
     }
 }

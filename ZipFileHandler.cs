@@ -40,6 +40,33 @@ namespace Better_Steps_Recorder
                 var existingEntries = new HashSet<string>(zip.Entries.Select(e => e.FullName));
                 var validEntries = new HashSet<string>();
 
+                // Save additional attributes
+                var additionalAttributes = new
+                {
+                    HyperlinkURL = Program._linkHeading.HyperlinkURL?.ToString(),
+                    HyperlinkText = Program._linkHeading.HyperlinkText,
+                    SpoilerTitle = Program._linkHeading.SpoilerTitle,
+                    SpoilerText = Program._linkHeading.SpoilerText
+                };
+
+                var additionalAttributesEntryName = "additional_attributes.json";
+                var existingAdditionalAttributesEntry = zip.GetEntry(additionalAttributesEntryName);
+                if (existingAdditionalAttributesEntry != null)
+                {
+                    existingAdditionalAttributesEntry.Delete(); // Remove the existing entry
+                }
+
+                var additionalAttributesEntry = zip.CreateEntry(additionalAttributesEntryName);
+                using (var entryStream = additionalAttributesEntry.Open())
+                using (var writer = new StreamWriter(entryStream))
+                {
+                    string json = JsonSerializer.Serialize(additionalAttributes);
+                    writer.Write(json);
+                }
+
+                validEntries.Add(additionalAttributesEntryName);
+
+                // Save record events
                 for (int i = 0; i < Program._recordEvents.Count; i++)
                 {
                     // Update the Step based on the list position
@@ -65,8 +92,6 @@ namespace Better_Steps_Recorder
 
                     // Add the new entry to the set of valid entries
                     validEntries.Add(eventEntryName);
-
-                    // Check for and add screenshot if not already processed
                 }
 
                 // Remove entries from the zip archive that are not in validEntries

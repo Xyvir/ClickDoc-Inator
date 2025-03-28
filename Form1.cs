@@ -242,6 +242,12 @@ namespace Better_Steps_Recorder
                 propertyGrid_RecordEvent.SelectedObject = null;
                 pictureBox1.Image = null;
                 richTextBox_stepText.Text = null;
+
+                // Clear the additional attributes
+                Program._linkHeading.HyperlinkURL = null;
+                Program._linkHeading.HyperlinkText = string.Empty;
+                Program._linkHeading.SpoilerTitle = string.Empty;
+                Program._linkHeading.SpoilerText = string.Empty;
             }
         }
 
