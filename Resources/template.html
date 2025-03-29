@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click-Doc</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .step-container {
+            display: flex;
+            
+            border: 2px solid black;
+            border-radius: 10px;
+            background-color: white;
+            width: 600px;
+            height: 260px;
+            margin: 20px auto;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .step-number {
+            font-size: 48px;
+            font-weight: bold;
+            margin-right: 15px;
+            flex: 0 0 auto;
+        }
+        .step-instructions {
+            flex: 1;
+            margin-right: 15px;
+			align-items: center;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .step-screenshot {
+            flex: 0 0 325px;
+            height: 250px;
+            background-color: #ddd;
+            border: 2px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- Step 1 -->
+    <div class="step-container">
+        <div>
+            <div class="step-number">#1</div>
+            <div class="step-instructions">
+                Click on the "File" menu. This opens a dropdown where you can access various document options.
+            </div>
+        </div>
+        <div class="step-screenshot">
+            Screenshot (325 x 250)
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-container">
+        <div>
+            <div class="step-number">#2</div>
+            <div class="step-instructions">
+                Select "Open" to load a file. This will show a dialog box where you can choose your file.
+            </div>
+        </div>
+        <div class="step-screenshot">
+            Screenshot (325 x 250)
+        </div>
+    </div>
+
+    <!-- Add more steps as needed -->
+</body>
+</html>
