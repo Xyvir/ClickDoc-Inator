@@ -1,6 +1,6 @@
 | Document Title |                    |
 |:-------------------------------------------|:-----------------------:|
-| ![_](_.png)![1](1.png)![](bar.png) | |
+| ![_](_.png)![1](1.png)![](bar.png) click | |
 |Click on the stuff       | ![](https://placehold.co/325x250) |
 | ![_](_.png)![2](2.png)![](bar.png) | |
 |Click on the stuff       | ![](https://placehold.co/325x250) |
