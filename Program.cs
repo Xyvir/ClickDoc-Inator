@@ -323,77 +323,130 @@ namespace Better_Steps_Recorder
 
 
 
-    public static void ExportDoc(string docPath, string kind)
-    {
-        try
+        public static void ExportDoc(string docPath, string kind)
         {
-            using (var writer = new StreamWriter(docPath))
+            try
             {
-                // Start the RTF document
-                writer.WriteLine("{\\rtf1\\ansi\\deff0");
-
-                // Initialize the list index
-                int stepNumber = 1;
-
-                // Iterate through each record event and add to the RTF document
-                foreach (var recordEvent in Program._recordEvents)
+                using (var writer = new StreamWriter(docPath))
                 {
-                    // Write the step number and text
-                    writer.WriteLine($"\\b Step {stepNumber}: \\b0 {recordEvent._StepText}\\par");
+                    // Extract the filename without the extension
+                    string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(docPath);
 
-                    // Increment the step number for the next item
-                    stepNumber++;
-
-                    // Decode the base64 screenshot
-                    if (!string.IsNullOrEmpty(recordEvent.Screenshotb64))
+                    // Start the document based on the kind
+                    switch (kind)
                     {
-                        byte[] imageBytes = Convert.FromBase64String(recordEvent.Screenshotb64);
-                        using (MemoryStream ms = new MemoryStream(imageBytes))
+                        case "RTF":
+                            writer.WriteLine("{\\rtf1\\ansi\\deff0");
+                            writer.WriteLine($"\\b {fileNameWithoutExtension} \\b0\\par");
+                            writer.WriteLine("\\par");
+                            break;
+
+                        case "MD":
+                            writer.WriteLine($"| {fileNameWithoutExtension}|                  |");
+                            break;
+
+                        // Add more cases here for other types if needed
+
+                        default:
+                            throw new NotSupportedException($"The document type '{kind}' is not supported.");
+                    }
+
+                    // Initialize the list index
+                    int stepNumber = 1;
+
+                    // Iterate through each record event and add to the document
+                    foreach (var recordEvent in Program._recordEvents)
+                    {
+                        // Write the step number and text
+                        switch (kind)
                         {
-                            using (Image image = Image.FromStream(ms))
+                            case "RTF":
+                                writer.WriteLine($"\\b Step {stepNumber}: \\b0 {recordEvent._StepText}\\par");
+                                break;
+
+                            case "MD":
+                                writer.WriteLine($"**Step {stepNumber}:** {recordEvent._StepText}");
+                                writer.WriteLine($"|:-------------------------------------------|:-----------------------:|")
+                                break;
+                        }
+
+                        // Increment the step number for the next item
+                        stepNumber++;
+
+                        // Decode the base64 screenshot
+                        if (!string.IsNullOrEmpty(recordEvent.Screenshotb64))
+                        {
+                            byte[] imageBytes = Convert.FromBase64String(recordEvent.Screenshotb64);
+                            using (MemoryStream ms = new MemoryStream(imageBytes))
                             {
-                                // Scale the image if necessary to fit the page width
-                                //float maxWidth = 500; // Adjust as needed
-                                //float scaleFactor = Math.Min(maxWidth / image.Width, 1);
-                                //int scaledWidth = (int)(image.Width * scaleFactor);
-                                //int scaledHeight = (int)(image.Height * scaleFactor);
+                                using (Image image = Image.FromStream(ms))
+                                {
+                                    using (MemoryStream rtfImageStream = GetRtfImage(image, recordEvent.MouseCoordinates.X, recordEvent.MouseCoordinates.Y, kind))
+                                    {
+                                        switch (kind)
+                                        {
+                                            case "MD":
+                                                // Save the image to a file and insert the image link into the Markdown document
+                                                string imagePath = Path.Combine(Path.GetDirectoryName(docPath), $"Step{stepNumber - 1}.png");
+                                                using (FileStream fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
+                                                {
+                                                    rtfImageStream.WriteTo(fileStream);
+                                                }
+                                                writer.WriteLine($"![Step {stepNumber - 1} Image](./{Path.GetFileName(imagePath)})");
+                                                break;
 
-                                // Convert the image to a byte array in RTF format
-                                string rtfImage = GetRtfImage(image, recordEvent.MouseCoordinates.X, recordEvent.MouseCoordinates.Y);
-
-                                // Insert the image into the document
-                                writer.WriteLine(rtfImage);
+                                            case "RTF":
+                                                // Convert the stream back to a string and write it
+                                                rtfImageStream.Position = 0; // Reset the stream position to the beginning
+                                                using (StreamReader reader = new StreamReader(rtfImageStream))
+                                                {
+                                                    string rtfImage = reader.ReadToEnd();
+                                                    // Insert the image into the document
+                                                    writer.WriteLine(rtfImage);
+                                                }
+                                                break;
+                                        }
+                                    }
+                                }
                             }
+                        }
+
+                        // Add two line breaks after each event
+                        switch (kind)
+                        {
+                            case "RTF":
+                                writer.WriteLine("\\par");
+                                writer.WriteLine("\\par");
+                                break;
+
+                            case "MD":
+                                writer.WriteLine();
+                                writer.WriteLine();
+                                break;
                         }
                     }
 
-                    // Add two line breaks after each event
-                    writer.WriteLine("\\par");
-                    writer.WriteLine("\\par");
-                 }
+                    // End the RTF document if the kind is "RTF"
+                    if (kind == "RTF")
+                    {
+                        writer.WriteLine("}");
+                    }
+                }
 
-                // End the RTF document
-                writer.WriteLine("}");
+                System.Windows.Forms.MessageBox.Show("Export completed successfully.", $"Export to {kind}", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-
-
-
-
-
-            System.Windows.Forms.MessageBox.Show("Export completed successfully.", "Export to RTF", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch (IOException ioEx)
+            {
+                System.Windows.Forms.MessageBox.Show($"Failed to save the document. {ioEx.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-        catch (IOException ioEx)
-        {
-            System.Windows.Forms.MessageBox.Show($"Failed to save the document. {ioEx.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-        catch (Exception ex)
-        {
-            System.Windows.Forms.MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
 
 
-        private static string GetRtfImage(Image image, int cursorX, int cursorY)
+        private static MemoryStream GetRtfImage(Image image, int cursorX, int cursorY, string kind)
         {
             const int cropWidth = 325;
             const int cropHeight = 250;
@@ -407,10 +460,6 @@ namespace Better_Steps_Recorder
                 // Calculate the cropping rectangle centered around the cursor
                 int cropX = cursorX - cropWidth / 2;
                 int cropY = cursorY - cropHeight / 2;
-
-                // Adjust crop area to ensure it doesn't bleed outside the window bounds
-                //cropX = Math.Max(0, Math.Min(cropX, windowWidth - cropWidth));
-                //cropY = Math.Max(0, Math.Min(cropY, windowHeight - cropHeight));
 
                 Rectangle cropRect = new Rectangle(cropX, cropY, cropWidth, cropHeight);
 
@@ -428,31 +477,36 @@ namespace Better_Steps_Recorder
                     }
 
                     // Convert the cropped image to PNG format
-                    using (MemoryStream stream = new MemoryStream())
+                    MemoryStream stream = new MemoryStream();
+                    croppedBitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+
+                    if (kind == "MD")
                     {
-                        croppedBitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                        byte[] bytes = stream.ToArray();
-                        int hexLength = bytes.Length;
-
-                        // Create the RTF image content
-                        StringBuilder sb = new StringBuilder();
-                        sb.Append(@"{\pict\pngblip\picw");
-                        sb.Append(cropWidth * 20); // Image width in twips
-                        sb.Append(@"\pich");
-                        sb.Append(cropHeight * 20); // Image height in twips
-                        sb.Append(@"\picwgoal");
-                        sb.Append(cropWidth * 20); // Target width in twips
-                        sb.Append(@"\pichgoal");
-                        sb.Append(cropHeight * 20); // Target height in twips
-                        sb.Append(" ");
-                        for (int i = 0; i < hexLength; i++)
-                        {
-                            sb.AppendFormat("{0:X2}", bytes[i]);
-                        }
-                        sb.Append("}");
-
-                        return sb.ToString();
+                        // Return the stream immediately for MD
+                        return stream;
                     }
+
+                    byte[] bytes = stream.ToArray();
+                    int hexLength = bytes.Length;
+
+                    // Create the RTF image content
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append(@"{\pict\pngblip\picw");
+                    sb.Append(cropWidth * 20); // Image width in twips
+                    sb.Append(@"\pich");
+                    sb.Append(cropHeight * 20); // Image height in twips
+                    sb.Append(@"\picwgoal");
+                    sb.Append(cropWidth * 20); // Target width in twips
+                    sb.Append(@"\pichgoal");
+                    sb.Append(cropHeight * 20); // Target height in twips
+                    sb.Append(" ");
+                    for (int i = 0; i < hexLength; i++)
+                    {
+                        sb.AppendFormat("{0:X2}", bytes[i]);
+                    }
+                    sb.Append("}");
+
+                    return new MemoryStream(Encoding.UTF8.GetBytes(sb.ToString()));
                 }
             }
         }
