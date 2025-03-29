@@ -1,4 +1,4 @@
-| Document Title | ![](bar.png)|                    
+| Document Title | |                    
 |-----------------:|-|
 | ![_](_.png)![1](1.png)![](bar.png) | |
 |Click on the stuff       | ![](https://placehold.co/325x250) |
@@ -34,8 +34,8 @@
 |Click on the stuff       | ![](https://placehold.co/325x250) |
 | ![1](1.png)![7](7.png)![](bar.png) | |
 |Click on the stuff       | ![](https://placehold.co/325x250) |
-| ![1](1.png)![8](8.png)![](bar.png) |![](bar.png) |
+| ![1](1.png)![8](8.png)![](bar.png) | |
 |Click on the stuff       | ![](https://placehold.co/325x250) |
-| ![1](1.png)![9](9.png)![](bar.png) |![](bar.png) |
+| ![1](1.png)![9](9.png)![](bar.png) | |
 |Click on the stuff       | ![](https://placehold.co/325x250) |
-| ![2](2.png)![0](0.png)![](bar.png) |![](bar.png) |
+| ![2](2.png)![0](0.png)![](bar.png) | |
