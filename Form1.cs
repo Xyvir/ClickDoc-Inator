@@ -259,6 +259,9 @@ namespace Better_Steps_Recorder
                 // Enable the edit hyperlink heading menu item
                 editHyperlinkHeadingToolStripMenuItem.Enabled = true;
                 toolStripMenuItem1_SaveAs.Enabled = true;
+
+                // Update the title bar text
+                UpdateTitleBar(zipFilePath);
             }
         }
 
@@ -279,6 +282,9 @@ namespace Better_Steps_Recorder
                 Program.zip = new ZipFileHandler(zipFilePath);
                 Program.LoadRecordEventsFromFile(zipFilePath);
                 EnableDisable_exportToolStripMenuItem();
+
+                // Update the title bar text
+                UpdateTitleBar(zipFilePath);
 
                 // Enable the edit hyperlink heading menu item
                 editHyperlinkHeadingToolStripMenuItem.Enabled = true;
@@ -673,6 +679,12 @@ namespace Better_Steps_Recorder
                     }
                 }
             }
+        }
+        private void UpdateTitleBar(string filePath)
+        {
+            string parentFolder = Path.GetFileName(Path.GetDirectoryName(filePath));
+            string fileName = Path.GetFileName(filePath);
+            this.Text = $"ClickDoc-Inator - ...\\{parentFolder}\\{fileName}";
         }
     }
 }
