@@ -1,0 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible&display=swap');
+
+/* Apply Atkinson Hyperlegible font to all elements */
+html, body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+}
+
+
