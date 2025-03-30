@@ -113,19 +113,35 @@ namespace Better_Steps_Recorder
                     }
                 }
             }
+            else if(me.Button == MouseButtons.Right)
+            {
+                if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
+                {
+                    // Change the Y coordinate to a negative value
+                    selectedEvent.MouseCoordinates = new WindowHelper.POINT { X = selectedEvent.MouseCoordinates.X, Y = -selectedEvent.MouseCoordinates.Y };
+
+                    // Draw crosshairs at the new mouse coordinates
+                    DrawCrosshairs(pictureBox1, selectedEvent.MouseCoordinates.X, selectedEvent.MouseCoordinates.Y);
+
+                    // Refresh the PropertyGrid to show the updated coordinates
+                    propertyGrid_RecordEvent.SelectedObject = null;
+                    propertyGrid_RecordEvent.SelectedObject = selectedEvent;
+                }
+            }
         }
 
-        private void DrawCrosshairs(PictureBox pictureBox, int x, int y)
+        private void DrawCrosshairs(PictureBox pictureBox, int x, int y1)
         {
             if (pictureBox.Image == null)
                 return;
+            int y = Math.Abs(y1);
 
             // Create a copy of the image to draw on
             Bitmap bitmap = new Bitmap(pictureBox.Image);
             using (Graphics g = Graphics.FromImage(bitmap))
             {
                 // Define the crosshair properties
-                Pen pen = new Pen(Color.HotPink, 2);
+                Pen pen = new Pen(y1 < 0 ? Color.Yellow : Color.HotPink, 2);
                 int crosshairSize = 40;
 
                 // Draw horizontal line
@@ -416,6 +432,18 @@ namespace Better_Steps_Recorder
         {
             if (Listbox_Events.SelectedItems.Count > 0)
             {
+                // Check if the Shift key is held down
+                if (!Control.ModifierKeys.HasFlag(Keys.Shift))
+                {
+                    // Show a confirmation dialog
+                    var result = MessageBox.Show("Are you sure you want to delete the selected events?\n(This cannot be Undo'd.)", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                    if (result != DialogResult.Yes)
+                    {
+                        // If the user chooses not to delete, exit the method
+                        return;
+                    }
+                }
+
                 // Create a list to store the selected events to remove them safely
                 List<RecordEvent> selectedEvents = new List<RecordEvent>();
 
@@ -448,7 +476,6 @@ namespace Better_Steps_Recorder
                 // Update the display of list items after removal
                 UpdateListItems();
                 EnableDisable_exportToolStripMenuItem();
-
             }
         }
 

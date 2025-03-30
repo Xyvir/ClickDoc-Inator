@@ -468,10 +468,11 @@ namespace Better_Steps_Recorder
         }
 
 
-        private static MemoryStream GetRtfImage(Image image, int cursorX, int cursorY, string kind)
+        private static MemoryStream GetRtfImage(Image image, int cursorX, int cursorY1, string kind)
         {
             const int cropWidth = 325;
             const int cropHeight = 250;
+            int cursorY = Math.Abs(cursorY1);
 
             using (Bitmap bitmap = new Bitmap(image))
             {
@@ -493,9 +494,12 @@ namespace Better_Steps_Recorder
                         g.DrawImage(bitmap, new Rectangle(0, 0, cropWidth, cropHeight), cropRect, GraphicsUnit.Pixel);
 
                         // Draw an arrow pointing at the cursor
-                        int arrowX = cursorX - cropX; // Cursor position relative to cropped image
-                        int arrowY = cursorY - cropY;
-                        DrawArrowAtCursor(g, arrowX, arrowY);
+                        if (cursorY1 > 0)
+                        {
+                            int arrowX = cursorX - cropX; // Cursor position relative to cropped image
+                            int arrowY = cursorY - cropY;
+                            DrawArrowAtCursor(g, arrowX, arrowY);
+                        }
                     }
 
                     // Convert the cropped image to PNG format
