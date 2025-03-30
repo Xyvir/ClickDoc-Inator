@@ -42,71 +42,74 @@ namespace Better_Steps_Recorder
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
-            if (!Program.IsRecording)
+            MouseEventArgs me = (MouseEventArgs)e;
+            if (me.Button == MouseButtons.Left)
             {
-                // Get the mouse click coordinates relative to the PictureBox
-                MouseEventArgs me = (MouseEventArgs)e;
-                int x = me.X;
-                int y = me.Y;
-
-                if (pictureBox1.Image != null)
+                if (!Program.IsRecording)
                 {
-                    // Calculate the aspect ratios
-                    float imageAspectRatio = (float)pictureBox1.Image.Width / pictureBox1.Image.Height;
-                    float pictureBoxAspectRatio = (float)pictureBox1.ClientSize.Width / pictureBox1.ClientSize.Height;
+                    // Get the mouse click coordinates relative to the PictureBox
+                    int x = me.X;
+                    int y = me.Y;
 
-                    // Calculate the actual displayed size of the image within the PictureBox
-                    int displayedWidth, displayedHeight;
-                    if (imageAspectRatio > pictureBoxAspectRatio)
+                    if (pictureBox1.Image != null)
                     {
-                        // Image is wider than the PictureBox
-                        displayedWidth = pictureBox1.ClientSize.Width;
-                        displayedHeight = (int)(pictureBox1.ClientSize.Width / imageAspectRatio);
-                    }
-                    else
-                    {
-                        // Image is taller than the PictureBox
-                        displayedWidth = (int)(pictureBox1.ClientSize.Height * imageAspectRatio);
-                        displayedHeight = pictureBox1.ClientSize.Height;
-                    }
+                        // Calculate the aspect ratios
+                        float imageAspectRatio = (float)pictureBox1.Image.Width / pictureBox1.Image.Height;
+                        float pictureBoxAspectRatio = (float)pictureBox1.ClientSize.Width / pictureBox1.ClientSize.Height;
 
-                    // Calculate the offsets if the image is centered within the PictureBox
-                    int offsetX = (pictureBox1.ClientSize.Width - displayedWidth) / 2;
-                    int offsetY = (pictureBox1.ClientSize.Height - displayedHeight) / 2;
-
-                    // Adjust the click coordinates based on the displayed size and offsets
-                    int adjustedX = (int)((x - offsetX) * ((float)pictureBox1.Image.Width / displayedWidth));
-                    int adjustedY = (int)((y - offsetY) * ((float)pictureBox1.Image.Height / displayedHeight));
-
-                    if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
-                    {
-                        // Update the mouse coordinates of the selected event
-                        selectedEvent.MouseCoordinates = new WindowHelper.POINT { X = adjustedX, Y = adjustedY };
-
-                        // Reload the step's image from the BSR file
-                        if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64))
+                        // Calculate the actual displayed size of the image within the PictureBox
+                        int displayedWidth, displayedHeight;
+                        if (imageAspectRatio > pictureBoxAspectRatio)
                         {
-                            try
-                            {
-                                byte[] imageBytes = Convert.FromBase64String(selectedEvent.Screenshotb64);
-                                using (MemoryStream ms = new MemoryStream(imageBytes))
-                                {
-                                    pictureBox1.Image = new Bitmap(ms);
-                                }
-
-                                // Draw crosshairs at the new mouse coordinates
-                                DrawCrosshairs(pictureBox1, adjustedX, adjustedY);
-                            }
-                            catch (Exception ex)
-                            {
-                                Debug.WriteLine($"Failed to load image from Base64 string: {ex.Message}");
-                                pictureBox1.Image = null;
-                            }
+                            // Image is wider than the PictureBox
+                            displayedWidth = pictureBox1.ClientSize.Width;
+                            displayedHeight = (int)(pictureBox1.ClientSize.Width / imageAspectRatio);
+                        }
+                        else
+                        {
+                            // Image is taller than the PictureBox
+                            displayedWidth = (int)(pictureBox1.ClientSize.Height * imageAspectRatio);
+                            displayedHeight = pictureBox1.ClientSize.Height;
                         }
 
-                        // Refresh the PropertyGrid to show the updated coordinates
-                        propertyGrid_RecordEvent.SelectedObject = null;
-                        propertyGrid_RecordEvent.SelectedObject = selectedEvent;
+                        // Calculate the offsets if the image is centered within the PictureBox
+                        int offsetX = (pictureBox1.ClientSize.Width - displayedWidth) / 2;
+                        int offsetY = (pictureBox1.ClientSize.Height - displayedHeight) / 2;
+
+                        // Adjust the click coordinates based on the displayed size and offsets
+                        int adjustedX = (int)((x - offsetX) * ((float)pictureBox1.Image.Width / displayedWidth));
+                        int adjustedY = (int)((y - offsetY) * ((float)pictureBox1.Image.Height / displayedHeight));
+
+                        if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
+                        {
+                            // Update the mouse coordinates of the selected event
+                            selectedEvent.MouseCoordinates = new WindowHelper.POINT { X = adjustedX, Y = adjustedY };
+
+                            // Reload the step's image from the BSR file
+                            if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64))
+                            {
+                                try
+                                {
+                                    byte[] imageBytes = Convert.FromBase64String(selectedEvent.Screenshotb64);
+                                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                                    {
+                                        pictureBox1.Image = new Bitmap(ms);
+                                    }
+
+                                    // Draw crosshairs at the new mouse coordinates
+                                    DrawCrosshairs(pictureBox1, adjustedX, adjustedY);
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"Failed to load image from Base64 string: {ex.Message}");
+                                    pictureBox1.Image = null;
+                                }
+                            }
+
+                            // Refresh the PropertyGrid to show the updated coordinates
+                            propertyGrid_RecordEvent.SelectedObject = null;
+                            propertyGrid_RecordEvent.SelectedObject = selectedEvent;
+                        }
                     }
                 }
             }
@@ -150,8 +153,7 @@ namespace Better_Steps_Recorder
         }
         public void ClearListBox()
         {
-            Listbox_Events.Items.Clear();
-            EnableDisable_exportToolStripMenuItem();
+            Listbox_Events.Items.Clear();  
             propertyGrid_RecordEvent.SelectedObject = null;
             pictureBox1.Image = null;
             richTextBox_stepText.Text = null;
@@ -213,6 +215,8 @@ namespace Better_Steps_Recorder
                 ToolStripMenuItem_Recording.Image = Properties.Resources.RecordTiny;
                 ActivityDelay = DefaultActivityDelay;
                 activityTimer_Tick(sender, e);
+
+                EnableDisable_exportToolStripMenuItem();
             }
             else
             {
@@ -221,6 +225,10 @@ namespace Better_Steps_Recorder
                 ToolStripMenuItem_Recording.BackColor = Color.IndianRed;
                 ToolStripMenuItem_Recording.Image = Properties.Resources.RecordPauseTiny;
                 ActivityDelay = 15000;
+
+                
+                ClearListBox();
+
             }
         }
 
@@ -336,12 +344,13 @@ namespace Better_Steps_Recorder
             {
                 exportToolStripMenuItem.Enabled = true;
                 exportToolMDStripMenuItem.Enabled = true;
-                
-                
+
+
+
             }
             else
             {
-                
+                Listbox_Events.Items.Add("<No events saved to currently open *.BSR file>");
                 exportToolStripMenuItem.Enabled = false;
                 exportToolMDStripMenuItem.Enabled = false;
                 
@@ -432,6 +441,8 @@ namespace Better_Steps_Recorder
 
                 // Update the display of list items after removal
                 UpdateListItems();
+                EnableDisable_exportToolStripMenuItem();
+
             }
         }
 

@@ -63,17 +63,23 @@ namespace Better_Steps_Recorder
 
         public static void LoadRecordEventsFromFile(string filePath)
         {
+            Debug.WriteLine($"LoadRecordEventsFromFile called with filePath: {filePath}");
+
             if (File.Exists(filePath))
             {
                 try
                 {
                     using (ZipArchive archive = ZipFile.OpenRead(filePath))
                     {
+                        Debug.WriteLine("Zip file opened successfully.");
+
                         _recordEvents = new List<RecordEvent>();
                         _form1Instance?.Invoke((Action)(() => _form1Instance.ClearListBox()));
 
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
+                            Debug.WriteLine($"Processing entry: {entry.FullName}");
+
                             if (entry.FullName == "additional_attributes.json")
                             {
                                 // Load additional attributes if the entry exists
@@ -90,6 +96,8 @@ namespace Better_Steps_Recorder
                                             Program._linkHeading.HyperlinkText = additionalAttributes.HyperlinkText;
                                             Program._linkHeading.SpoilerTitle = additionalAttributes.SpoilerTitle;
                                             Program._linkHeading.SpoilerText = additionalAttributes.SpoilerText;
+
+                                            Debug.WriteLine("Additional attributes loaded successfully.");
                                         }
                                     }
                                 }
@@ -101,46 +109,60 @@ namespace Better_Steps_Recorder
                             else if (Path.GetDirectoryName(entry.FullName) == "events" && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
                             {
                                 // Load record events
-                                using (StreamReader reader = new StreamReader(entry.Open()))
+                                try
                                 {
-                                    string jsonContent = reader.ReadToEnd();
-                                    var recordEvent = JsonSerializer.Deserialize<RecordEvent>(jsonContent);
-
-                                    if (recordEvent != null)
+                                    using (StreamReader reader = new StreamReader(entry.Open()))
                                     {
-                                        _recordEvents.Add(recordEvent);
-                                        EventCounter++;
+                                        string jsonContent = reader.ReadToEnd();
+                                        var recordEvent = JsonSerializer.Deserialize<RecordEvent>(jsonContent);
+
+                                        if (recordEvent != null)
+                                        {
+                                            _recordEvents.Add(recordEvent);
+                                            EventCounter++;
+                                            Debug.WriteLine($"Record event loaded: {recordEvent.ID}");
+                                        }
                                     }
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"Failed to load record event: {ex.Message}");
                                 }
                             }
                         }
 
                         // Sort the events by the Step attribute
                         _recordEvents.Sort((x, y) => x.Step.CompareTo(y.Step));
+                        Debug.WriteLine("Record events sorted by step.");
 
                         // Update the UI with the sorted list
                         foreach (var recordEvent in _recordEvents)
                         {
                             _form1Instance?.Invoke((Action)(() => _form1Instance.AddRecordEventToListBox(recordEvent)));
                         }
+                        Debug.WriteLine("UI updated with sorted record events.");
                     }
                 }
                 catch (JsonException ex)
                 {
                     System.Windows.Forms.MessageBox.Show($"Invalid JSON format: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine($"Invalid JSON format: {ex.Message}");
                 }
                 catch (IOException ex)
                 {
                     System.Windows.Forms.MessageBox.Show($"File I/O error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine($"File I/O error: {ex.Message}");
                 }
                 catch (Exception ex)
                 {
                     System.Windows.Forms.MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Debug.WriteLine($"An unexpected error occurred: {ex.Message}");
                 }
             }
             else
             {
                 System.Windows.Forms.MessageBox.Show("File does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Debug.WriteLine("File does not exist.");
             }
         }
 
@@ -366,7 +388,7 @@ namespace Better_Steps_Recorder
 
                             case "MD":
                                 writer.WriteLine($"**Step {stepNumber}:** {recordEvent._StepText}");
-                                writer.WriteLine($"|:-------------------------------------------|:-----------------------:|")
+                                writer.WriteLine($"|:-------------------------------------------|:-----------------------:|");
                                 break;
                         }
 
