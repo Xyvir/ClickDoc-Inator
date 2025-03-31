@@ -368,6 +368,7 @@ namespace Better_Steps_Recorder
                         case "MD":
                             writer.WriteLine($"---");
                             writer.WriteLine($"layout : default");
+                            writer.WriteLine($"title: {displayName}");
                             writer.WriteLine($"---");
                             writer.WriteLine($"| {displayName} ||");
                             writer.WriteLine($"|-:|-|");
@@ -416,11 +417,7 @@ namespace Better_Steps_Recorder
                                     imageFullPath = recordEvent.Screenshotb64;
                                 }
 
-                                writer.WriteLine($"---");
-                                writer.WriteLine($"title: {displayName}");
-                                writer.WriteLine($"layout: default");
-                                writer.WriteLine($"---");
-                                writer.WriteLine($"|[ STEP  {stepNumber} ]||");
+                                writer.WriteLine($"| #{stepNumber} ||");
                                 writer.WriteLine($"| {recordEvent._StepText} |![]({imageFullPath})|");
                                 break;
                         }
