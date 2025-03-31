@@ -417,6 +417,8 @@ namespace Better_Steps_Recorder
                                 }
 
                                 writer.WriteLine($"---");
+                                writer.WriteLine($"title: {displayName}");
+                                writer.WriteLine($"layout: default");
                                 writer.WriteLine($"---");
                                 writer.WriteLine($"|[ STEP  {stepNumber} ]||");
                                 writer.WriteLine($"| {recordEvent._StepText} |![]({imageFullPath})|");
