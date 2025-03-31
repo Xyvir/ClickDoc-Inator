@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             Listbox_Events = new ListBox();
             contextMenu_ListBox_Events = new ContextMenuStrip(components);
+            newExternalImageStepStripMenuItem = new ToolStripMenuItem();
             moveUpToolStripMenuItem = new ToolStripMenuItem();
             moveDownToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
@@ -91,9 +92,18 @@
             // contextMenu_ListBox_Events
             // 
             contextMenu_ListBox_Events.ImageScalingSize = new Size(20, 20);
-            contextMenu_ListBox_Events.Items.AddRange(new ToolStripItem[] { moveUpToolStripMenuItem, moveDownToolStripMenuItem, deleteToolStripMenuItem });
+            contextMenu_ListBox_Events.Items.AddRange(new ToolStripItem[] { newExternalImageStepStripMenuItem, moveUpToolStripMenuItem, moveDownToolStripMenuItem, deleteToolStripMenuItem });
             contextMenu_ListBox_Events.Name = "contextMenuStrip1";
             contextMenu_ListBox_Events.Size = new Size(159, 76);
+            // 
+            // NewExternalImageStepStripMenuItem
+            // 
+            newExternalImageStepStripMenuItem.Name = "newExternalImageStepStripMenuItem";
+            newExternalImageStepStripMenuItem.Size = new Size(158, 24);
+            newExternalImageStepStripMenuItem.Text = "New External Image Step";
+            newExternalImageStepStripMenuItem.Click += newExternalImageStepStripMenuItem_Click;
+
+
             // 
             // moveUpToolStripMenuItem
             // 
@@ -365,6 +375,7 @@
         private ToolStripMenuItem exportToolMDStripMenuItem;
         private ContextMenuStrip contextMenu_ListBox_Events;
         private ToolStripMenuItem moveUpToolStripMenuItem;
+        private ToolStripMenuItem newExternalImageStepStripMenuItem;
         private ToolStripMenuItem moveDownToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem1_SaveAs;

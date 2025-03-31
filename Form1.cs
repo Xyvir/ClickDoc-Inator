@@ -3,6 +3,7 @@ using System.Drawing.Imaging;
 using System.Text.Json;
 using System.Windows.Automation;
 using System.Windows.Forms;
+using Microsoft.VisualBasic;
 
 namespace Better_Steps_Recorder
 {
@@ -199,8 +200,8 @@ namespace Better_Steps_Recorder
             {
                 propertyGrid_RecordEvent.SelectedObject = selectedEvent;
 
-                // Check if Screenshotb64 is not null or empty
-                if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64))
+                // Check if Screenshotb64 is not null or empty and starts with "iVBO"
+                if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64) && selectedEvent.Screenshotb64.StartsWith("iVBO"))
                 {
                     try
                     {
@@ -225,7 +226,7 @@ namespace Better_Steps_Recorder
                 }
                 else
                 {
-                    pictureBox1.Image = null; // Clear the image if there's no Base64 string
+                    pictureBox1.Image = null; // Clear the image if there's no valid Base64 string
                 }
 
                 // Set the step text
@@ -529,6 +530,46 @@ namespace Better_Steps_Recorder
         {
             Program.zip?.SaveToZip();
             FileDialogHelper.SaveAs();
+        }
+
+        private void newExternalImageStepStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string prompt = "Please enter relative path, for example \"foo\\bar.png\" without quotes";
+            string title = "Enter Relative Path";
+            string defaultValue = "";
+
+            // Show the InputBox and get the user input
+            string relativePath = Interaction.InputBox(prompt, title, defaultValue);
+
+            if (!string.IsNullOrEmpty(relativePath))
+            {
+                // Create a new RecordEvent with the specified properties
+                var newEvent = new RecordEvent
+                {
+                    Step = Program._recordEvents.Count + 1,
+                    Screenshotb64 = relativePath,
+                    ID = Guid.NewGuid(),
+                    CreationTime = DateTime.Now,
+                    WindowTitle = " ",
+                    ApplicationName = " ",
+                    WindowCoordinates = new WindowHelper.RECT(),
+                    WindowSize = new WindowHelper.Size(),
+                    UICoordinates = new WindowHelper.RECT(),
+                    UISize = new WindowHelper.Size(),
+                    MouseCoordinates = new WindowHelper.POINT(),
+                    OGMouseCoordinates = new WindowHelper.POINT(),
+                    TooltipText = " ",
+                    EventType = " ",
+                    _StepText = " ",
+                    ElementName = " ",
+                    ElementType = " "
+                };
+
+                // Add the new event to the list and update the UI
+                Program._recordEvents.Add(newEvent);
+                AddRecordEventToListBox(newEvent);
+                EnableDisable_exportToolStripMenuItem();
+            }
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
