@@ -354,6 +354,8 @@ namespace Better_Steps_Recorder
                     // Extract the filename without the extension
                     string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(docPath);
 
+                    string displayName = fileNameWithoutExtension.Replace("_", " ");
+
                     // Start the document based on the kind
                     switch (kind)
                     {
@@ -364,7 +366,8 @@ namespace Better_Steps_Recorder
                             break;
 
                         case "MD":
-                            writer.WriteLine($"| {fileNameWithoutExtension}|                  |");
+                            writer.WriteLine($"| {displayName} ||");
+                            writer.WriteLine($"|-:|-|");
                             break;
 
                         // Add more cases here for other types if needed
@@ -376,9 +379,20 @@ namespace Better_Steps_Recorder
                     // Initialize the list index
                     int stepNumber = 1;
 
+                    // Create a new folder for images if exporting to Markdown
+                    string imageFolderName = $"{fileNameWithoutExtension}-img";
+                    string imageFolderPath = Path.Combine(Path.GetDirectoryName(docPath), imageFolderName);
+                    if (kind == "MD" && !Directory.Exists(imageFolderPath))
+                    {
+                        Directory.CreateDirectory(imageFolderPath);
+                    }
+
                     // Iterate through each record event and add to the document
                     foreach (var recordEvent in Program._recordEvents)
                     {
+                        //generate display step number
+                        string displayStep = stepNumber < 10 ? $"0{stepNumber}" : stepNumber.ToString();
+
                         // Write the step number and text
                         switch (kind)
                         {
@@ -387,8 +401,22 @@ namespace Better_Steps_Recorder
                                 break;
 
                             case "MD":
-                                writer.WriteLine($"**Step {stepNumber}:** {recordEvent._StepText}");
-                                writer.WriteLine($"|:-------------------------------------------|:-----------------------:|");
+                                string imageFilename;
+                                string imageFullPath;
+                                if (recordEvent.Screenshotb64.StartsWith("iVBO"))
+                                {
+                                    imageFilename = $"{displayStep}-{fileNameWithoutExtension}.png";
+                                    imageFullPath = ($"{imageFolderName}/{imageFilename}");
+                                }
+                                else
+                                {
+                                    imageFullPath = recordEvent.Screenshotb64;
+                                }
+
+                                writer.WriteLine($"---");
+                                writer.WriteLine($"---");
+                                writer.WriteLine($"|[ STEP  {displayStep} ]||");
+                                writer.WriteLine($"| {recordEvent._StepText} |![]({imageFullPath})|");
                                 break;
                         }
 
@@ -396,7 +424,7 @@ namespace Better_Steps_Recorder
                         stepNumber++;
 
                         // Decode the base64 screenshot
-                        if (!string.IsNullOrEmpty(recordEvent.Screenshotb64))
+                        if (!string.IsNullOrEmpty(recordEvent.Screenshotb64) && recordEvent.Screenshotb64.StartsWith("iVBO"))
                         {
                             byte[] imageBytes = Convert.FromBase64String(recordEvent.Screenshotb64);
                             using (MemoryStream ms = new MemoryStream(imageBytes))
@@ -408,13 +436,13 @@ namespace Better_Steps_Recorder
                                         switch (kind)
                                         {
                                             case "MD":
-                                                // Save the image to a file and insert the image link into the Markdown document
-                                                string imagePath = Path.Combine(Path.GetDirectoryName(docPath), $"Step{stepNumber - 1}.png");
-                                                using (FileStream fileStream = new FileStream(imagePath, FileMode.Create, FileAccess.Write))
+                                                // Save the image to a file in the subdirectory
+                                                string imageFilename = $"{displayStep}-{fileNameWithoutExtension}.png";
+                                                string imageFullPath = Path.Combine(imageFolderPath, imageFilename);
+                                                using (FileStream fileStream = new FileStream(imageFullPath, FileMode.Create, FileAccess.Write))
                                                 {
                                                     rtfImageStream.WriteTo(fileStream);
                                                 }
-                                                writer.WriteLine($"![Step {stepNumber - 1} Image](./{Path.GetFileName(imagePath)})");
                                                 break;
 
                                             case "RTF":
@@ -432,6 +460,7 @@ namespace Better_Steps_Recorder
                                 }
                             }
                         }
+                        
 
                         // Add two line breaks after each event
                         switch (kind)
@@ -442,8 +471,6 @@ namespace Better_Steps_Recorder
                                 break;
 
                             case "MD":
-                                writer.WriteLine();
-                                writer.WriteLine();
                                 break;
                         }
                     }
