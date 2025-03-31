@@ -370,6 +370,23 @@ namespace Better_Steps_Recorder
                             writer.WriteLine($"layout : default");
                             writer.WriteLine($"title: {displayName}");
                             writer.WriteLine($"---");
+
+                            // Write additional properties
+                            if (!string.IsNullOrEmpty(Program._linkHeading.HyperlinkText) && Program._linkHeading.HyperlinkURL != null)
+                            {
+                                writer.WriteLine($"[{Program._linkHeading.HyperlinkText}]({Program._linkHeading.HyperlinkURL})");
+                            }
+
+                            if (!string.IsNullOrEmpty(Program._linkHeading.SpoilerTitle) && !string.IsNullOrEmpty(Program._linkHeading.SpoilerText))
+                            {
+                                writer.WriteLine();
+                                writer.WriteLine("<details>");
+                                writer.WriteLine($"  <summary>{Program._linkHeading.SpoilerTitle}</summary>");
+                                writer.WriteLine($"  {Program._linkHeading.SpoilerText}");
+                                writer.WriteLine("</details>");
+                            }
+
+                            writer.WriteLine();
                             writer.WriteLine($"| {displayName} ||");
                             writer.WriteLine($"|-:|-|");
                             break;

@@ -276,11 +276,18 @@ namespace Better_Steps_Recorder
             string zipFilePath = FileDialogHelper.ShowSaveFileDialog();
             if (zipFilePath != null && zipFilePath != "")
             {
-                // Replace spaces with underscores in the file path
-                zipFilePath = zipFilePath.Replace(" ", "_");
+                // Extract the directory and filename and remove spaces
+                string directory = Path.GetDirectoryName(zipFilePath);
+                string filename = Path.GetFileName(zipFilePath).Replace(" ", "_");
+                string newFilePath = Path.Combine(directory, filename);
+
+                // Output debug information
+                Debug.WriteLine($"Directory: {directory}");
+                Debug.WriteLine($"Filename: {filename}");
+                Debug.WriteLine($"NewFilePath: {newFilePath}");
 
                 EnableRecording();
-                Program.zip = new ZipFileHandler(zipFilePath);
+                Program.zip = new ZipFileHandler(newFilePath);
                 Program._recordEvents = new List<RecordEvent>();
                 Listbox_Events.Items.Clear();
                 Program.EventCounter = 1;
@@ -549,12 +556,20 @@ namespace Better_Steps_Recorder
             string zipFilePath = FileDialogHelper.ShowSaveFileDialog();
             if (zipFilePath != null && zipFilePath != "")
             {
-                // Replace spaces with underscores in the file path
-                zipFilePath = zipFilePath.Replace(" ", "_");
+               
+                // Extract the directory and filename and replaces spaces
+                string directory = Path.GetDirectoryName(zipFilePath);
+                string filename = Path.GetFileName(zipFilePath).Replace(" ", "_");
+                string newFilePath = Path.Combine(directory, filename);
 
-                Program.zip = new ZipFileHandler(zipFilePath);
+                // Output debug information
+                Debug.WriteLine($"Directory: {directory}");
+                Debug.WriteLine($"Filename: {filename}");
+                Debug.WriteLine($"NewFilePath: {newFilePath}");
+
+                Program.zip = new ZipFileHandler(newFilePath);
                 Program.zip.SaveToZip();
-                UpdateTitleBar(zipFilePath);
+                UpdateTitleBar(newFilePath);
             }
         }
 
