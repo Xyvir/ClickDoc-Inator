@@ -259,8 +259,9 @@ namespace Better_Steps_Recorder
                 ToolStripMenuItem_Recording.Image = Properties.Resources.RecordPauseTiny;
                 ActivityDelay = 15000;
 
-                
+
                 ClearListBox();
+                UpdateListItems();
 
             }
         }
@@ -283,11 +284,14 @@ namespace Better_Steps_Recorder
                 propertyGrid_RecordEvent.SelectedObject = null;
                 pictureBox1.Image = null;
                 richTextBox_stepText.Text = null;
+
                 // Clear the additional attributes
-                Program._linkHeading.HyperlinkURL = new Uri("https://www.example.com/");
-                Program._linkHeading.HyperlinkText = "Example Hyperlink Text";
-                Program._linkHeading.SpoilerTitle = "Example Spoiler Title";
-                Program._linkHeading.SpoilerText = "Example Spoiler Text";
+                Program._linkHeading.HyperlinkURL = new Uri("https://www.youtube.com/watch?v=###########");
+                Program._linkHeading.HyperlinkText = "Watch the Video";
+                Program._linkHeading.SpoilerTitle = "Video Transcript";
+                Program._linkHeading.SpoilerText = "Default Spoiler Text";
+                // Note these are originally set under the object definition in linkheading.cs
+
 
                 // Enable the edit hyperlink heading menu item
                 editHyperlinkHeadingToolStripMenuItem.Enabled = true;
@@ -401,7 +405,7 @@ namespace Better_Steps_Recorder
         private void exportToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Program.zip?.SaveToZip();
-            // Set up the save file dialog to specify the output path for the Word document
+            // Set up the save file dialog to specify the output path for the Rtf document
             using (SaveFileDialog saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Filter = "Rich Text Format|*.rtf";

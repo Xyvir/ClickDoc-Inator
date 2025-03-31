@@ -11,10 +11,11 @@ namespace Better_Steps_Recorder
 
         public LinkHeading()
         {
-            HyperlinkURL = new Uri("http://example.com");
-            HyperlinkText = "Default Hyperlink Text";
-            SpoilerTitle = "Default Spoiler Title";
+            HyperlinkURL = new Uri("https://www.youtube.com/watch?v=###########");
+            HyperlinkText = "Watch the Video";
+            SpoilerTitle = "Video Transcript";
             SpoilerText = "Default Spoiler Text";
+            // Note these are also 'set' under the function newToolStripMenuItem_Click() in Form1.cs
         }
     }
 }

@@ -40,7 +40,8 @@ namespace Better_Steps_Recorder
                 var existingEntries = new HashSet<string>(zip.Entries.Select(e => e.FullName));
                 var validEntries = new HashSet<string>();
 
-                // Save additional attributes
+                // Save
+                // attributes
                 var additionalAttributes = new
                 {
                     HyperlinkURL = Program._linkHeading.HyperlinkURL?.ToString(),
