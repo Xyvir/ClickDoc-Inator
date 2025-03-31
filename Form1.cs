@@ -276,6 +276,9 @@ namespace Better_Steps_Recorder
             string zipFilePath = FileDialogHelper.ShowSaveFileDialog();
             if (zipFilePath != null && zipFilePath != "")
             {
+                // Replace spaces with underscores in the file path
+                zipFilePath = zipFilePath.Replace(" ", "_");
+
                 EnableRecording();
                 Program.zip = new ZipFileHandler(zipFilePath);
                 Program._recordEvents = new List<RecordEvent>();
@@ -292,7 +295,6 @@ namespace Better_Steps_Recorder
                 Program._linkHeading.SpoilerTitle = "Video Transcript";
                 Program._linkHeading.SpoilerText = "Default Spoiler Text";
                 // Note these are originally set under the object definition in linkheading.cs
-
 
                 // Enable the edit hyperlink heading menu item
                 editHyperlinkHeadingToolStripMenuItem.Enabled = true;
@@ -327,6 +329,21 @@ namespace Better_Steps_Recorder
                 // Enable the edit hyperlink heading menu item
                 editHyperlinkHeadingToolStripMenuItem.Enabled = true;
                 toolStripMenuItem1_SaveAs.Enabled = true;
+
+                // Check if the filename contains "template" (case insensitive)
+                if (Path.GetFileName(zipFilePath).IndexOf("template", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    // Show the "Save As" dialog
+                    string newZipFilePath = FileDialogHelper.ShowSaveFileDialog();
+                    if (newZipFilePath != null && newZipFilePath != "")
+                    {
+                        // Save the loaded file to the new path
+                        Program.zip.SaveToZip();
+
+                        // Update the title bar text with the new file path
+                        UpdateTitleBar(newZipFilePath);
+                    }
+                }
             }
         }
 
@@ -529,14 +546,23 @@ namespace Better_Steps_Recorder
         private void toolStripMenuItem1_SaveAs_Click(object sender, EventArgs e)
         {
             Program.zip?.SaveToZip();
-            FileDialogHelper.SaveAs();
+            string zipFilePath = FileDialogHelper.ShowSaveFileDialog();
+            if (zipFilePath != null && zipFilePath != "")
+            {
+                // Replace spaces with underscores in the file path
+                zipFilePath = zipFilePath.Replace(" ", "_");
+
+                Program.zip = new ZipFileHandler(zipFilePath);
+                Program.zip.SaveToZip();
+                UpdateTitleBar(zipFilePath);
+            }
         }
 
         private void newExternalImageStepStripMenuItem_Click(object sender, EventArgs e)
         {
-            string prompt = "Please enter relative path, for example \"foo\\bar.png\" without quotes";
+            string prompt = "Please enter relative path, for example \"foo/bar.png\" without quotes";
             string title = "Enter Relative Path";
-            string defaultValue = "";
+            string defaultValue = "shared/";
 
             // Show the InputBox and get the user input
             string relativePath = Interaction.InputBox(prompt, title, defaultValue);
