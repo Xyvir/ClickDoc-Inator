@@ -1,4 +1,5 @@
-| Document Title | |                    
+# Display Name
+| Procedure | |                    
 |-----------------:|-|
 |[ STEP 1 ]| |
 |Click on the stuff       | ![](img.png) |
