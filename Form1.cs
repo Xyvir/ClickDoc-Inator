@@ -308,7 +308,7 @@ namespace Better_Steps_Recorder
                 toolStripMenuItem1_SaveAs.Enabled = true;
 
                 // Update the title bar text
-                UpdateTitleBar(zipFilePath);
+                UpdateTitleBar(newFilePath);
             }
         }
 
