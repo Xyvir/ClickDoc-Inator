@@ -85,26 +85,8 @@ namespace Better_Steps_Recorder
                             // Update the mouse coordinates of the selected event
                             selectedEvent.MouseCoordinates = new WindowHelper.POINT { X = adjustedX, Y = adjustedY };
 
-                            // Reload the step's image from the BSR file
-                            if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64))
-                            {
-                                try
-                                {
-                                    byte[] imageBytes = Convert.FromBase64String(selectedEvent.Screenshotb64);
-                                    using (MemoryStream ms = new MemoryStream(imageBytes))
-                                    {
-                                        pictureBox1.Image = new Bitmap(ms);
-                                    }
-
-                                    // Draw crosshairs at the new mouse coordinates
-                                    DrawCrosshairs(pictureBox1, adjustedX, adjustedY);
-                                }
-                                catch (Exception ex)
-                                {
-                                    Debug.WriteLine($"Failed to load image from Base64 string: {ex.Message}");
-                                    pictureBox1.Image = null;
-                                }
-                            }
+                            // Draw crosshairs at the new mouse coordinates
+                            DrawCrosshairs(pictureBox1, adjustedX, adjustedY);
 
                             // Refresh the PropertyGrid to show the updated coordinates
                             propertyGrid_RecordEvent.SelectedObject = null;
@@ -113,7 +95,7 @@ namespace Better_Steps_Recorder
                     }
                 }
             }
-            else if(me.Button == MouseButtons.Right)
+            else if (me.Button == MouseButtons.Right)
             {
                 if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
                 {
@@ -128,12 +110,47 @@ namespace Better_Steps_Recorder
                     propertyGrid_RecordEvent.SelectedObject = selectedEvent;
                 }
             }
+            else if (me.Button == MouseButtons.Middle)
+            {
+                if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
+                {
+                    // Set MouseCoordinates to OGMouseCoordinates
+                    selectedEvent.MouseCoordinates = selectedEvent.OGMouseCoordinates;
+
+                    // Draw crosshairs at the new mouse coordinates
+                    DrawCrosshairs(pictureBox1, selectedEvent.MouseCoordinates.X, selectedEvent.MouseCoordinates.Y);
+
+                    // Refresh the PropertyGrid to show the updated coordinates
+                    propertyGrid_RecordEvent.SelectedObject = null;
+                    propertyGrid_RecordEvent.SelectedObject = selectedEvent;
+                }
+            }
         }
 
         private void DrawCrosshairs(PictureBox pictureBox, int x, int y1)
         {
-            if (pictureBox.Image == null)
+            if (pictureBox.Image == null || Listbox_Events.SelectedItem is not RecordEvent selectedEvent)
                 return;
+
+            // Reload the step's image from the BSR file
+            if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64))
+            {
+                try
+                {
+                    byte[] imageBytes = Convert.FromBase64String(selectedEvent.Screenshotb64);
+                    using (MemoryStream ms = new MemoryStream(imageBytes))
+                    {
+                        pictureBox.Image = new Bitmap(ms);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Failed to load image from Base64 string: {ex.Message}");
+                    pictureBox.Image = null;
+                    return;
+                }
+            }
+
             int y = Math.Abs(y1);
 
             // Create a copy of the image to draw on
