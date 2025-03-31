@@ -13,9 +13,9 @@ namespace Better_Steps_Recorder
         private const int DefaultActivityDelay = 5000;
         private int ActivityDelay = DefaultActivityDelay;
         private Point _mouseDownLocation;
+
         public Form1()
         {
-
             InitializeComponent();
             System.Diagnostics.Debug.WriteLine("Loaded");
             Listbox_Events.KeyDown += new KeyEventHandler(ListBox1_KeyDown);
@@ -27,8 +27,36 @@ namespace Better_Steps_Recorder
             // Add the Click event handler for pictureBox1
             pictureBox1.Click += pictureBox1_Click;
 
+            // Set the Multiline property to false
+            richTextBox_stepText.Multiline = true;
 
+            // Handle the KeyPress event to prevent the Enter key from being processed
+            richTextBox_stepText.KeyPress += richTextBox_stepText_KeyPress;
+
+            // Handle the KeyDown event to prevent Shift+Enter and Ctrl+Enter
+            richTextBox_stepText.KeyDown += richTextBox_stepText_KeyDown;
+
+            // Handle the TextChanged event to remove any pasted newlines
+            richTextBox_stepText.TextChanged += richTextBox_stepText_TextChanged;
         }
+
+        private void richTextBox_stepText_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                e.Handled = true; // Prevent the Enter key from being processed
+            }
+        }
+
+        private void richTextBox_stepText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter && (e.Modifiers == Keys.Shift || e.Modifiers == Keys.Control))
+            {
+                e.SuppressKeyPress = true; // Prevent Shift+Enter and Ctrl+Enter
+            }
+        }
+
+        
         private void editHyperlinkHeadingToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var form = new EditHyperlinkHeadingForm())
@@ -191,6 +219,7 @@ namespace Better_Steps_Recorder
             propertyGrid_RecordEvent.SelectedObject = null;
             pictureBox1.Image = null;
             richTextBox_stepText.Text = null;
+
         }
 
         // This is the logic for whenever the 'active' event is changed.
@@ -370,7 +399,13 @@ namespace Better_Steps_Recorder
                         activityTimer.Start();
                     }
 
-
+                    string text = richTextBox_stepText.Text;
+                    if (text.Contains("\n") || text.Contains("\r"))
+                    {
+                        text = text.Replace("\r", "").Replace("\n", "");
+                        richTextBox_stepText.Text = text;
+                        richTextBox_stepText.SelectionStart = text.Length; // Move the cursor to the end
+                    }
 
                 }
                 else
