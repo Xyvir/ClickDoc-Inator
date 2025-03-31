@@ -530,6 +530,12 @@ namespace Better_Steps_Recorder
                 int cropX = cursorX - cropWidth / 2;
                 int cropY = cursorY - cropHeight / 2;
 
+                // Adjust the cropping rectangle if it goes beyond the image boundaries
+                if (cropX < 0) cropX = 0;
+                if (cropY < 0) cropY = 0;
+                if (cropX + cropWidth > windowWidth) cropX = windowWidth - cropWidth;
+                if (cropY + cropHeight > windowHeight) cropY = windowHeight - cropHeight;
+
                 Rectangle cropRect = new Rectangle(cropX, cropY, cropWidth, cropHeight);
 
                 // Crop the image to the specified rectangle
