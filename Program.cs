@@ -403,9 +403,25 @@ namespace Better_Steps_Recorder
                     // Create a new folder for images if exporting to Markdown
                     string imageFolderName = $"{fileNameWithoutExtension}-img";
                     string imageFolderPath = Path.Combine(Path.GetDirectoryName(docPath), imageFolderName);
-                    if (kind == "MD" && !Directory.Exists(imageFolderPath))
+                    if (kind == "MD")
                     {
-                        Directory.CreateDirectory(imageFolderPath);
+                        if (Directory.Exists(imageFolderPath))
+                        {
+                            // Delete all image contents in the folder
+                            DirectoryInfo di = new DirectoryInfo(imageFolderPath);
+                            foreach (FileInfo file in di.GetFiles())
+                            {
+                                file.Delete();
+                            }
+                            foreach (DirectoryInfo dir in di.GetDirectories())
+                            {
+                                dir.Delete(true);
+                            }
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(imageFolderPath);
+                        }
                     }
 
                     // Iterate through each record event and add to the document
@@ -479,7 +495,7 @@ namespace Better_Steps_Recorder
                                 }
                             }
                         }
-                        
+
 
                         // Add two line breaks after each event
                         switch (kind)
