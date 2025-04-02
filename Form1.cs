@@ -600,6 +600,9 @@ namespace Better_Steps_Recorder
                     }
                 }
 
+                // Store the step number of the first selected event
+                int stepNumberToSelect = selectedEvents.First().Step;
+
                 // Remove each selected event
                 foreach (var selectedEvent in selectedEvents)
                 {
@@ -620,6 +623,13 @@ namespace Better_Steps_Recorder
                 // Update the display of list items after removal
                 UpdateListItems();
                 EnableDisable_exportToolStripMenuItem();
+
+                // Re-select the event with the same step number
+                var eventToSelect = Program._recordEvents.FirstOrDefault(e => e.Step == stepNumberToSelect);
+                if (eventToSelect != null)
+                {
+                    Listbox_Events.SelectedItem = eventToSelect;
+                }
             }
         }
 
