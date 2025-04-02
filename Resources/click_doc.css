@@ -1,0 +1,43 @@
+/* Import Atkinson Hyperlegible font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap');
+
+/* Apply the font to the entire page */
+body {
+    font-family: 'Atkinson Hyperlegible', sans-serif;
+    margin: 0; /* Remove default margins */
+    padding: 0 25%; /* Add 33% padding on left and right */
+    box-sizing: border-box; /* Ensure padding doesn't affect table width */
+}
+
+/* Ensure the table takes full width of the available space */
+table {
+    border-collapse: collapse;
+    border-spacing: 1 10px; /* Creates slight separation between row bubbles */
+    width: 100%; /* Keep table width at 100% of the available space */
+    margin: auto; /* Center the table horizontally */
+}
+
+td {
+    padding: 10px;
+}
+
+/* Format <thead> */
+thead tr th {
+    font-size: 32px;
+    text-align: right;
+}
+
+/* Style for odd rows (1st, 3rd, 5th, etc.) */
+tbody tr:nth-child(2n+1) {
+    font-size: 64px; /* Medium Large text */
+    border-top: 2px solid #000; /* Add a top border line */
+}
+
+/* Style for even rows (2nd, 4th, 6th, etc.) */
+tbody tr:nth-child(2n+2) {
+    font-size: 18px;
+	text-align: right;	
+    border-bottom: 2px solid #000; /* Add a top border line */
+    /* Default normal text */
+    /* Rounded edges at the bottom */
+}

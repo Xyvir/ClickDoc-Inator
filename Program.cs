@@ -388,7 +388,7 @@ namespace Better_Steps_Recorder
 
                             writer.WriteLine();
                             writer.WriteLine($"| {displayName} ||");
-                            writer.WriteLine($"|-:|-|");
+                            writer.WriteLine($"|-|-|");
                             break;
 
                         // Add more cases here for other types if needed
