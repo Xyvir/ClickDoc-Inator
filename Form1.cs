@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Windows.Automation;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using System.Runtime.InteropServices;
 
 namespace Better_Steps_Recorder
 {
@@ -13,6 +14,16 @@ namespace Better_Steps_Recorder
         private const int DefaultActivityDelay = 5000;
         private int ActivityDelay = DefaultActivityDelay;
         private Point _mouseDownLocation;
+
+        private const int WM_HOTKEY = 0x0312;
+        private const int HOTKEY_ID_MOVE_UP = 1;
+        private const int HOTKEY_ID_MOVE_DOWN = 2;
+
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
 
         public Form1()
         {
@@ -38,6 +49,58 @@ namespace Better_Steps_Recorder
 
             // Handle the TextChanged event to remove any pasted newlines
             richTextBox_stepText.TextChanged += richTextBox_stepText_TextChanged;
+
+            // Register hotkeys
+            RegisterHotKey(this.Handle, HOTKEY_ID_MOVE_UP, 0x0001, (uint)Keys.Up); // ALT + Up
+            RegisterHotKey(this.Handle, HOTKEY_ID_MOVE_DOWN, 0x0001, (uint)Keys.Down); // ALT + Down
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WM_HOTKEY)
+            {
+                int id = m.WParam.ToInt32();
+                if (id == HOTKEY_ID_MOVE_UP)
+                {
+                    MoveSelectedEventUp();
+                }
+                else if (id == HOTKEY_ID_MOVE_DOWN)
+                {
+                    MoveSelectedEventDown();
+                }
+            }
+            base.WndProc(ref m);
+        }
+
+        private void MoveSelectedEventUp()
+        {
+            var selectedIndex = Listbox_Events.SelectedIndex;
+            if (selectedIndex > 0)
+            {
+                Listbox_Events.ClearSelected();
+                Listbox_Events.SetSelected(selectedIndex - 1, true);
+                Listbox_Events_SelectedIndexChanged(Listbox_Events, EventArgs.Empty);
+            }
+            richTextBox_stepText.Focus();
+        }
+
+        private void MoveSelectedEventDown()
+        {
+            var selectedIndex = Listbox_Events.SelectedIndex;
+            if (selectedIndex < Listbox_Events.Items.Count - 1)
+            {
+                Listbox_Events.ClearSelected();
+                Listbox_Events.SetSelected(selectedIndex + 1, true);
+                Listbox_Events_SelectedIndexChanged(Listbox_Events, EventArgs.Empty);
+            }
+            richTextBox_stepText.Focus();
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            UnregisterHotKey(this.Handle, HOTKEY_ID_MOVE_UP);
+            UnregisterHotKey(this.Handle, HOTKEY_ID_MOVE_DOWN);
+            base.OnFormClosing(e);
         }
 
         private void richTextBox_stepText_KeyPress(object sender, KeyPressEventArgs e)
