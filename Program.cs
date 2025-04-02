@@ -254,8 +254,8 @@ namespace Better_Steps_Recorder
                                 UIElement = element,
                                 ElementName= elementName,
                                 ElementType= elementType,
-                                OGMouseCoordinates = new WindowHelper.POINT { X = cursorPos.X, Y = cursorPos.Y },
-                                MouseCoordinates = new WindowHelper.POINT { X = cursorPos.X, Y = cursorPos.Y },
+                                OGMouseCoordinates = new WindowHelper.POINT { X = cursorPos.X-rect.Left, Y = cursorPos.Y-rect.Top },
+                                MouseCoordinates = new WindowHelper.POINT { X = cursorPos.X-rect.Left, Y = cursorPos.Y-rect.Top },
                                 EventType = clickType,
                                 //TODO Make this work with timed linstening event
                                 TooltipText = tooltipText,
