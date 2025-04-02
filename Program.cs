@@ -611,24 +611,47 @@ namespace Better_Steps_Recorder
 
         private static void DrawArrowAtCursor(Graphics gfx, int cursorX, int cursorY)
         {
-            // Define the arrow properties
-            Pen arrowPen = new Pen(Color.Magenta, 5);
-            arrowPen.EndCap = System.Drawing.Drawing2D.LineCap.Custom;
-            arrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(5, 5); // Bigger arrow head
+            // Enable anti-aliasing for smoother lines
+            gfx.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            // Define the length of the arrow
-            int arrowLength = 50;
+            // Define the larger arrow properties
+            Pen largeArrowPen = new Pen(Color.Magenta, 4);
+            largeArrowPen.EndCap = System.Drawing.Drawing2D.LineCap.Custom;
+            largeArrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(5, 5); // Bigger arrow head
+
+            // Define the smaller arrow properties
+            Pen smallArrowPen = new Pen(Color.Black, 1);
+            smallArrowPen.EndCap = System.Drawing.Drawing2D.LineCap.Custom;
+            smallArrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(8, 8); // Smaller arrow head
+
+            // Define the length of the arrows
+            int largeArrowLength = 35;
+            int smallArrowLength = largeArrowLength - 4; // Smaller arrow is 3 pixels shorter
 
             // Constants for the angle and length of the arrow
             double angleDegrees = 215.0; // Angle in degrees (left of Y-axis)
             double angleRadians = Math.PI * angleDegrees / 180.0; // Convert to radians
 
-            // Calculate the end point based on the angle
-            int endX = cursorX - (int)(arrowLength * Math.Sin(angleRadians));
-            int endY = cursorY - (int)(arrowLength * Math.Cos(angleRadians));
+            // Calculate the end point for the larger arrow based on the angle
+            int largeEndX = cursorX - (int)(largeArrowLength * Math.Sin(angleRadians));
+            int largeEndY = cursorY - (int)(largeArrowLength * Math.Cos(angleRadians));
 
-            // Draw the arrow pointing at the given coordinates at a 35-degree angle left off the Y-axis
-            gfx.DrawLine(arrowPen, endX, endY, cursorX, cursorY);
+            // Calculate the end point for the smaller arrow based on the angle
+            int smallEndX = cursorX - (int)(smallArrowLength * Math.Sin(angleRadians));
+            int smallEndY = cursorY - (int)(smallArrowLength * Math.Cos(angleRadians));
+
+            // Draw a small (5 pixel) 20% transparent circle at the cursor position
+            using (Brush transparentBrush = new SolidBrush(Color.FromArgb(90, Color.Gray))) // 20% transparent red
+            {
+                gfx.FillEllipse(transparentBrush, cursorX - 4, cursorY - 4, 10, 10); // 5 pixel circle centered at cursor
+            }
+
+            // Draw the larger arrow pointing at the given coordinates at a 35-degree angle left off the Y-axis
+            gfx.DrawLine(largeArrowPen, largeEndX, largeEndY, cursorX, cursorY);
+
+            // Draw the smaller arrow inside the larger arrow
+            int smalloffset = -2;
+            gfx.DrawLine(smallArrowPen, smallEndX - smalloffset, smallEndY - smalloffset, cursorX - smalloffset, cursorY - smalloffset);
         }
         public static Image Base64ToImage(string base64String)
         {
