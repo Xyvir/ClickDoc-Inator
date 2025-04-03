@@ -3,6 +3,11 @@ The "ClickDocInator" is a modern alternative to the now-deprecated PSR.exe tool,
 
 The release binaries are large because they have .net8 included so no extra download is needed and can be run as non-admin (portable)
 
+## Recommended Workflows
+Export to MD then you can convert to PDF or HTML with Pandoc. Style HTML with CSS (example style.css include)
+Export to MD then host in github pages, possibly use custom themes like Just the Docs. 
+
+
 ## Developing
 1. Clone Repo
 2. Open .csproj in VisualStudio 2022 to start vibe-coding.
