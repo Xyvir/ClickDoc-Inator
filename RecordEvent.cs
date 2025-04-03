@@ -42,6 +42,16 @@ namespace Better_Steps_Recorder
 
         public string? _StepText { get; set; }
 
+        public bool HasPng()
+        {
+            if (string.IsNullOrEmpty(Screenshotb64))
+            {
+                throw new InvalidOperationException("Screenshotb64 is null or empty.");
+            }
+
+            return Screenshotb64.StartsWith("iVBO");
+        }
+
         public override string ToString()
         {
             // Customize the string representation for display in the ListBox

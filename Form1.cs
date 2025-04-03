@@ -292,8 +292,7 @@ namespace Better_Steps_Recorder
             {
                 propertyGrid_RecordEvent.SelectedObject = selectedEvent;
 
-                // Check if Screenshotb64 is not null or empty and starts with "iVBO"
-                if (!string.IsNullOrEmpty(selectedEvent.Screenshotb64) && selectedEvent.Screenshotb64.StartsWith("iVBO"))
+                if (selectedEvent.HasPng())
                 {
                     try
                     {
@@ -318,7 +317,31 @@ namespace Better_Steps_Recorder
                 }
                 else
                 {
-                    pictureBox1.Image = null; // Clear the image if there's no valid Base64 string
+                    // Get the directory of the current .bsr file
+                    string bsrDirectory = Path.GetDirectoryName(Program.zip?.zipFilePath);
+
+                    // Combine the directory with the relative path
+                    string fullPath = Path.Combine(bsrDirectory, selectedEvent.Screenshotb64);
+
+                    try
+                    {
+                        // Attempt to load the image from the full path
+                        pictureBox1.Image = Image.FromFile(fullPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Failed to load image from relative path: {ex.Message}");
+
+                        // Display a message in the PictureBox if the image cannot be loaded
+                        Bitmap bitmap = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+                        using (Graphics g = Graphics.FromImage(bitmap))
+                        {
+                            g.Clear(Color.White);
+                            g.DrawString($"No Image could be loaded from \n \"{fullPath}\"",
+                                         new Font("Arial", 12), Brushes.Black, new PointF(10, 10));
+                        }
+                        pictureBox1.Image = bitmap;
+                    }
                 }
 
                 // Set the step text
