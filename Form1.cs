@@ -77,11 +77,14 @@ namespace Better_Steps_Recorder
             var selectedIndex = Listbox_Events.SelectedIndex;
             if (selectedIndex > 0)
             {
+                UpdateListItems(); // Update the list items after moving down
                 Listbox_Events.ClearSelected();
                 Listbox_Events.SetSelected(selectedIndex - 1, true);
                 Listbox_Events_SelectedIndexChanged(Listbox_Events, EventArgs.Empty);
+                
             }
             richTextBox_stepText.Focus();
+            richTextBox_stepText.SelectAll();
         }
 
         private void MoveSelectedEventDown()
@@ -89,11 +92,14 @@ namespace Better_Steps_Recorder
             var selectedIndex = Listbox_Events.SelectedIndex;
             if (selectedIndex < Listbox_Events.Items.Count - 1)
             {
+                UpdateListItems(); // Update the list items after moving down
                 Listbox_Events.ClearSelected();
                 Listbox_Events.SetSelected(selectedIndex + 1, true);
                 Listbox_Events_SelectedIndexChanged(Listbox_Events, EventArgs.Empty);
+                
             }
             richTextBox_stepText.Focus();
+            richTextBox_stepText.SelectAll();
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
