@@ -495,8 +495,11 @@ namespace Better_Steps_Recorder
 
         private void ToolStripMenuItem_Recording_Click(object sender, EventArgs e)
         {
+            // Toggle Recording State based on current state when button is pressed.
+          
             if (Program.IsRecording)
             {
+                //Recording is started, so take actions to Stop :
                 Program.UnHookMouseOperations();
                 ToolStripMenuItem_Recording.Text = "Start Recording";
                 ToolStripMenuItem_Recording.BackColor = SystemColors.Control;
@@ -508,6 +511,7 @@ namespace Better_Steps_Recorder
             }
             else
             {
+                //Recording is stopped; so take Actions to Start
                 Program.HookMouseOperations();
                 ToolStripMenuItem_Recording.Text = "Pause Recording";
                 ToolStripMenuItem_Recording.BackColor = Color.IndianRed;
@@ -610,7 +614,7 @@ namespace Better_Steps_Recorder
 
         private void richTextBox_stepText_TextChanged(object sender, EventArgs e)
         {
-
+            // this logic IMEDDIATELY 'auto-saves' richtextbox edits to back the recordEvent._Steptext property.
 
             if (Listbox_Events.SelectedItem is RecordEvent selectedEvent)
             {
@@ -625,6 +629,8 @@ namespace Better_Steps_Recorder
                     }
 
                     string text = richTextBox_stepText.Text;
+                    // This part dyanmically removes newlines from the richtextbox if they are pasted in.
+
                     if (text.Contains("\n") || text.Contains("\r"))
                     {
                         text = text.Replace("\r", "").Replace("\n", "");
