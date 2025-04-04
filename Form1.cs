@@ -521,7 +521,7 @@ namespace Better_Steps_Recorder
           
             if (Program.IsRecording)
             {
-                //Recording is started, so take actions to Stop :
+                //Recording is started, so take actions to Stop record:
                 Program.UnHookMouseOperations();
                 ToolStripMenuItem_Recording.Text = "Start Recording";
                 ToolStripMenuItem_Recording.BackColor = SystemColors.Control;
@@ -540,9 +540,15 @@ namespace Better_Steps_Recorder
                 ToolStripMenuItem_Recording.Image = Properties.Resources.RecordPauseTiny;
                 ActivityDelay = 15000;
 
+                // Minimize Window
+                this.WindowState = FormWindowState.Minimized;
 
                 ClearListBox();
                 UpdateListItems();
+
+           
+
+
 
             }
         }

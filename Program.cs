@@ -432,25 +432,49 @@ namespace Better_Steps_Recorder
                                 break;
 
                             case "MD":
+                                // Determine printStep and tmpStepText based on the presence of "::"
+                                string printStep, tmpStepText;
+
+                                if (recordEvent._StepText.Contains("::"))
+                                {
+                                    // Extract text up to "::" and append ":"
+                                    int delimiterIndex = recordEvent._StepText.IndexOf("::");
+                                    printStep = recordEvent._StepText.Substring(0, delimiterIndex) + ":";
+
+                                    // Extract the remaining text after "::"
+                                    tmpStepText = recordEvent._StepText.Substring(delimiterIndex + 2);
+                                }
+                                else
+                                {
+                                    // Default behavior if "::" is not found
+                                    printStep = $"#{stepNumber}";
+                                    tmpStepText = recordEvent._StepText;
+
+                                    // Increment stepNumber
+                                    stepNumber++;
+                                }
+
+                                // Define the image filename and path
                                 string imageFilename;
                                 string imageFullPath;
+
                                 if (recordEvent.Screenshotb64.StartsWith("iVBO"))
                                 {
                                     imageFilename = $"{displayStep}-{fileNameWithoutExtension}.png";
-                                    imageFullPath = ($"{imageFolderName}/{imageFilename}");
+                                    imageFullPath = $"{imageFolderName}/{imageFilename}";
                                 }
                                 else
                                 {
                                     imageFullPath = recordEvent.Screenshotb64;
                                 }
 
-                                writer.WriteLine($"| #{stepNumber} ||");
-                                writer.WriteLine($"| {recordEvent._StepText} |![]({imageFullPath})|");
+                                // Write the Markdown table lines
+                                writer.WriteLine($"| {printStep} ||");
+                                writer.WriteLine($"| {tmpStepText} |![]({imageFullPath})|");
                                 break;
                         }
 
-                        // Increment the step number for the next item
-                        stepNumber++;
+     
 
                         // Decode the base64 screenshot
                         if (!string.IsNullOrEmpty(recordEvent.Screenshotb64) && recordEvent.Screenshotb64.StartsWith("iVBO"))
