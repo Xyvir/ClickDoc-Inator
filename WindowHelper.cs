@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
-using System.Windows;
-using System.Windows.Automation;
-using System.Diagnostics.Tracing;
-using Microsoft.VisualBasic.ApplicationServices;
+
 
 namespace Better_Steps_Recorder
 {

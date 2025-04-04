@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows.Forms;
-
+﻿
 namespace Better_Steps_Recorder
 {
     public partial class EditHyperlinkHeadingForm : Form

@@ -1,25 +1,17 @@
-using System;
-using System.Collections.Generic;
+
 using System.Diagnostics;
-using System.Drawing;
+
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
-using System.Windows;
+
 using System.Windows.Automation;
-using static Better_Steps_Recorder.WindowHelper;
+
 using System.Text.Json;
 using System.IO.Compression;
 //using Xceed.Document.NET;
 //using Xceed.Words.NET;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Windows.Forms;
-using System.ComponentModel;
-using System.Windows.Media.Media3D;
+
 
 namespace Better_Steps_Recorder
 {

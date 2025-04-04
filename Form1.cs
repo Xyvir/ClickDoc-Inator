@@ -2,7 +2,6 @@ using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.Text.Json;
 using System.Windows.Automation;
-using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
 using NHunspell;
