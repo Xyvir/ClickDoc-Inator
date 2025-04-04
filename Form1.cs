@@ -1,7 +1,4 @@
 using System.Diagnostics;
-using System.Drawing.Imaging;
-using System.Text.Json;
-using System.Windows.Automation;
 using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
 using NHunspell;
@@ -406,6 +403,32 @@ namespace Better_Steps_Recorder
             if (e.KeyCode == Keys.Delete)
             {
                 deleteToolStripMenuItem_Click(sender, e);
+            }
+
+            // Check if CTRL+A was pressed
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+            {
+                System.Diagnostics.Debug.WriteLine("CTRL + A PRESSED IN LISTBOX");
+
+                // Clear Selected Event
+                Listbox_Events.SelectedItems.Clear();
+
+                // Use a temporary list to store items
+                var itemsToSelect = new List<object>();
+
+                foreach (var item in Listbox_Events.Items)
+                {
+                    itemsToSelect.Add(item); // Collect items
+                }
+
+                // Add items to SelectedItems outside the loop
+                foreach (var item in itemsToSelect)
+                {
+                    Listbox_Events.SelectedItems.Add(item);
+                }
+
+
+
             }
         }
         public void AddRecordEventToListBox(RecordEvent recordEvent)
