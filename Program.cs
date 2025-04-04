@@ -92,7 +92,7 @@ namespace Better_Steps_Recorder
 
                                         if (additionalAttributes != null)
                                         {
-                                            Program._linkHeading.HyperlinkURL = new Uri(additionalAttributes.HyperlinkURL);
+                                            Program._linkHeading.HyperlinkURL = additionalAttributes.HyperlinkURL;
                                             Program._linkHeading.HyperlinkText = additionalAttributes.HyperlinkText;
                                             Program._linkHeading.SpoilerTitle = additionalAttributes.SpoilerTitle;
                                             Program._linkHeading.SpoilerText = additionalAttributes.SpoilerText;

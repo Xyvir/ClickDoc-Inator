@@ -154,16 +154,34 @@ namespace Better_Steps_Recorder
         private void EditHyperlinkHeadingForm_Load(object sender, EventArgs e)
         {
             // Load existing data
-            textBoxHyperlinkURL.Text = Program._linkHeading.HyperlinkURL.ToString();
+            textBoxHyperlinkURL.Text = Program._linkHeading.HyperlinkURL?.ToString() ?? string.Empty;
             textBoxHyperlinkText.Text = Program._linkHeading.HyperlinkText;
             textBoxSpoilerTitle.Text = Program._linkHeading.SpoilerTitle;
             textBoxSpoilerText.Text = Program._linkHeading.SpoilerText;
+
+            // Set default values if any of the text boxes are empty
+            if (string.IsNullOrEmpty(textBoxHyperlinkURL.Text))
+            {
+                textBoxHyperlinkURL.Text = "https://www.youtube.com/watch?v=###########";
+            }
+            if (string.IsNullOrEmpty(textBoxHyperlinkText.Text))
+            {
+                textBoxHyperlinkText.Text = "Watch the Video";
+            }
+            if (string.IsNullOrEmpty(textBoxSpoilerTitle.Text))
+            {
+                textBoxSpoilerTitle.Text = "Video Transcript";
+            }
+            if (string.IsNullOrEmpty(textBoxSpoilerText.Text))
+            {
+                textBoxSpoilerText.Text = "Default Spoiler Text";
+            }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
             // Save the changes
-            Program._linkHeading.HyperlinkURL = new Uri(textBoxHyperlinkURL.Text);
+            Program._linkHeading.HyperlinkURL = textBoxHyperlinkURL.Text;
             Program._linkHeading.HyperlinkText = textBoxHyperlinkText.Text;
             Program._linkHeading.SpoilerTitle = textBoxSpoilerTitle.Text;
             Program._linkHeading.SpoilerText = textBoxSpoilerText.Text;

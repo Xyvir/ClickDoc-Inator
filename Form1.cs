@@ -418,11 +418,11 @@ namespace Better_Steps_Recorder
                 richTextBox_stepText.Text = null;
 
                 // Clear the additional attributes
-                Program._linkHeading.HyperlinkURL = new Uri("https://www.youtube.com/watch?v=###########");
-                Program._linkHeading.HyperlinkText = "Watch the Video";
-                Program._linkHeading.SpoilerTitle = "Video Transcript";
-                Program._linkHeading.SpoilerText = "Default Spoiler Text";
-                // Note these are originally set under the object definition in linkheading.cs
+                Program._linkHeading.HyperlinkURL = "";
+                Program._linkHeading.HyperlinkText = "";
+                Program._linkHeading.SpoilerTitle = "";
+                Program._linkHeading.SpoilerText = "";
+                // Note these are originally set under the object definition in EditHyperlinkheadingform.cs
 
                 // Enable the edit hyperlink heading menu item
                 editHyperlinkHeadingToolStripMenuItem.Enabled = true;
