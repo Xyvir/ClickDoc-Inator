@@ -32,7 +32,11 @@
   </ItemGroup>
 
 <ItemGroup>
-	<FrameworkReference Include="Microsoft.WindowsDesktop.App"/>
+	<FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+</ItemGroup>
+
+<ItemGroup>
+  <PackageReference Include="NHunspell" Version="1.2.5554.16953" />
 </ItemGroup>
 
 

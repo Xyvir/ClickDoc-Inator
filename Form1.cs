@@ -5,11 +5,16 @@ using System.Windows.Automation;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using System.Runtime.InteropServices;
+using NHunspell;
 
 namespace Better_Steps_Recorder
 {
     public partial class Form1 : Form
     {
+
+        private Hunspell _hunspell;
+        private ContextMenuStrip _contextMenu;
+
         public System.Windows.Forms.Timer activityTimer;
         private const int DefaultActivityDelay = 5000;
         private int ActivityDelay = DefaultActivityDelay;
@@ -31,6 +36,13 @@ namespace Better_Steps_Recorder
             System.Diagnostics.Debug.WriteLine("Loaded");
             Listbox_Events.KeyDown += new KeyEventHandler(ListBox1_KeyDown);
 
+            // Initialize NHunspell
+            _hunspell = new Hunspell("en_US.aff", "en_US.dic");
+
+            // Initialize context menu
+            _contextMenu = new ContextMenuStrip();
+            _contextMenu.ItemClicked += ContextMenu_ItemClicked;
+
             activityTimer = new System.Windows.Forms.Timer();
             activityTimer.Interval = ActivityDelay;
             activityTimer.Tick += activityTimer_Tick;
@@ -49,11 +61,131 @@ namespace Better_Steps_Recorder
 
             // Handle the TextChanged event to remove any pasted newlines
             richTextBox_stepText.TextChanged += richTextBox_stepText_TextChanged;
+            richTextBox_stepText.MouseUp += RichTextBox_stepText_MouseUp;
 
             // Register hotkeys
             RegisterHotKey(this.Handle, HOTKEY_ID_MOVE_UP, 0x0001, (uint)Keys.Up); // ALT + Up
             RegisterHotKey(this.Handle, HOTKEY_ID_MOVE_DOWN, 0x0001, (uint)Keys.Down); // ALT + Down
         }
+
+ 
+        private void RichTextBox_stepText_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Get the character index from the mouse position
+                int index = richTextBox_stepText.GetCharIndexFromPosition(e.Location);
+
+                // Move the cursor to the clicked position
+                richTextBox_stepText.SelectionStart = index;
+                richTextBox_stepText.SelectionLength = 0; // Clear any existing selection
+
+                // Get the word at the new cursor position
+                string word = GetWordAtIndex(index);
+
+                // Check if the word exists and is misspelled
+                if (!string.IsNullOrEmpty(word) && !_hunspell.Spell(word))
+                {
+                    // Show spelling suggestions
+                    ShowSuggestions(word, e.Location);
+                }
+            }
+        }
+
+        private void CheckSpelling()
+        {
+            // Save the current selection position
+            int currentSelectionStart = richTextBox_stepText.SelectionStart;
+            int currentSelectionLength = richTextBox_stepText.SelectionLength;
+
+            // Reset background formatting without affecting the cursor position
+            richTextBox_stepText.SelectAll();
+            richTextBox_stepText.SelectionBackColor = Color.White;
+
+            string text = richTextBox_stepText.Text; // Get full text
+            int startIndex = 0;
+
+            foreach (string word in text.Split(new[] { ' ', '\t', '\n', '\r', '.', ',', ';', ':', '!', '?' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                // Find the word's actual position in the text
+                int wordStartIndex = text.IndexOf(word, startIndex);
+
+                if (wordStartIndex >= 0 && !_hunspell.Spell(word)) // If misspelled
+                {
+                    // Apply background formatting to the misspelled word
+                    richTextBox_stepText.Select(wordStartIndex, word.Length);
+                    richTextBox_stepText.SelectionBackColor = Color.LightYellow;
+                }
+
+                // Advance the startIndex to avoid highlighting the same word multiple times
+                startIndex = wordStartIndex + word.Length;
+            }
+
+            // Restore the user's original selection
+            richTextBox_stepText.Select(currentSelectionStart, currentSelectionLength);
+        }
+
+        private string GetWordAtIndex(int index)
+        {
+            int start = index;
+            int end = index;
+
+            while (start > 0 && !char.IsWhiteSpace(richTextBox_stepText.Text[start - 1]))
+            {
+                start--;
+            }
+
+            while (end < richTextBox_stepText.Text.Length && !char.IsWhiteSpace(richTextBox_stepText.Text[end]))
+            {
+                end++;
+            }
+
+            return richTextBox_stepText.Text.Substring(start, end - start);
+        }
+
+        private void ShowSuggestions(string word, Point location)
+        {
+            _contextMenu.Items.Clear();
+            List<string> suggestions = _hunspell.Suggest(word);
+
+            foreach (string suggestion in suggestions)
+            {
+                _contextMenu.Items.Add(suggestion);
+            }
+
+            _contextMenu.Show(richTextBox_stepText, location);
+        }
+
+        private void ContextMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            string selectedWord = e.ClickedItem.Text;
+            int cursorPosition = richTextBox_stepText.SelectionStart; // Get cursor position
+            string text = richTextBox_stepText.Text;
+
+            // Find the start of the word
+            int start = cursorPosition;
+            while (start > 0 && !char.IsWhiteSpace(text[start - 1]))
+            {
+                start--;
+            }
+
+            // Find the end of the word
+            int end = cursorPosition;
+            while (end < text.Length && !char.IsWhiteSpace(text[end]))
+            {
+                end++;
+            }
+
+            // Reset the background color of the word to white
+            richTextBox_stepText.SelectionStart = start;
+            richTextBox_stepText.SelectionLength = end - start;
+            richTextBox_stepText.SelectionBackColor = Color.White; // Reset background color
+
+            // Replace the word
+            richTextBox_stepText.SelectedText = selectedWord;
+
+        }
+
 
         protected override void WndProc(ref Message m)
         {
@@ -352,6 +484,7 @@ namespace Better_Steps_Recorder
 
                 // Set the step text
                 richTextBox_stepText.Text = selectedEvent._StepText;
+                CheckSpelling();
             }
             else
             {
@@ -498,7 +631,8 @@ namespace Better_Steps_Recorder
                         richTextBox_stepText.Text = text;
                         richTextBox_stepText.SelectionStart = text.Length; // Move the cursor to the end
                     }
-
+ 
+                    
                 }
                 else
                 {
