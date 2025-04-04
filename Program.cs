@@ -383,7 +383,9 @@ namespace Better_Steps_Recorder
                             writer.WriteLine($"|-|-|");
                             break;
 
-                        // Add more cases here for other types if needed
+                        case "IMGs":
+                            //don't trigger fault
+                            break;
 
                         default:
                             throw new NotSupportedException($"The document type '{kind}' is not supported.");
@@ -462,6 +464,26 @@ namespace Better_Steps_Recorder
                                     {
                                         switch (kind)
                                         {
+
+                                            case "IMGs":
+                                                // Get stepTextImgName
+                                                string stepTextImgName = recordEvent._StepText.Length > 25 
+                                                ? recordEvent._StepText.Substring(0, 25) 
+                                                : recordEvent._StepText;
+
+                                                // Replace spaces with underscores
+                                                stepTextImgName = stepTextImgName.Replace(" ", "_");
+
+
+                                                // Save the image to a file in the subdirectory
+                                                string imageFilename2 = $"{stepTextImgName}.png";
+                                                string imageFullPath2 = Path.Combine(Path.GetDirectoryName(docPath), imageFilename2);
+                                                using (FileStream fileStream = new FileStream(imageFullPath2, FileMode.Create, FileAccess.Write))
+                                                {
+                                                    rtfImageStream.WriteTo(fileStream);
+                                                }
+                                                break;
+
                                             case "MD":
                                                 // Save the image to a file in the subdirectory
                                                 string imageFilename = $"{displayStep}-{fileNameWithoutExtension}.png";
@@ -507,9 +529,10 @@ namespace Better_Steps_Recorder
                     {
                         writer.WriteLine("}");
                     }
+                    
                 }
 
-                System.Windows.Forms.MessageBox.Show("Export completed successfully.", $"Export to {kind}", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                System.Windows.Forms.MessageBox.Show($"Exported {kind} at {docPath}", "Export completed successfully.", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (IOException ioEx)
             {

@@ -33,6 +33,7 @@
             Listbox_Events = new ListBox();
             contextMenu_ListBox_Events = new ContextMenuStrip(components);
             newExternalImageStepStripMenuItem = new ToolStripMenuItem();
+            exportImageStepStripMenuItem = new ToolStripMenuItem();
             moveUpToolStripMenuItem = new ToolStripMenuItem();
             moveDownToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
@@ -92,7 +93,7 @@
             // contextMenu_ListBox_Events
             // 
             contextMenu_ListBox_Events.ImageScalingSize = new Size(20, 20);
-            contextMenu_ListBox_Events.Items.AddRange(new ToolStripItem[] { newExternalImageStepStripMenuItem, moveUpToolStripMenuItem, moveDownToolStripMenuItem, deleteToolStripMenuItem });
+            contextMenu_ListBox_Events.Items.AddRange(new ToolStripItem[] { newExternalImageStepStripMenuItem, moveUpToolStripMenuItem, moveDownToolStripMenuItem, deleteToolStripMenuItem, exportImageStepStripMenuItem });
             contextMenu_ListBox_Events.Name = "contextMenuStrip1";
             contextMenu_ListBox_Events.Size = new Size(159, 76);
             // 
@@ -102,6 +103,16 @@
             newExternalImageStepStripMenuItem.Size = new Size(158, 24);
             newExternalImageStepStripMenuItem.Text = "New External Image Step";
             newExternalImageStepStripMenuItem.Click += newExternalImageStepStripMenuItem_Click;
+
+            // 
+            // exportImageStepStripMenuItem
+            // 
+            exportImageStepStripMenuItem.Name = "exportImageStepStripMenuItem";
+            exportImageStepStripMenuItem.Size = new Size(158, 24);
+            exportImageStepStripMenuItem.Text = "Export All Images; Named via StepText";
+            exportImageStepStripMenuItem.Click += exportImageStepStripMenuItem_Click;
+
+
 
 
             // 
@@ -376,6 +387,7 @@
         private ContextMenuStrip contextMenu_ListBox_Events;
         private ToolStripMenuItem moveUpToolStripMenuItem;
         private ToolStripMenuItem newExternalImageStepStripMenuItem;
+        private ToolStripMenuItem exportImageStepStripMenuItem;
         private ToolStripMenuItem moveDownToolStripMenuItem;
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem toolStripMenuItem1_SaveAs;

@@ -912,6 +912,11 @@ namespace Better_Steps_Recorder
             }
         }
 
+        private void exportImageStepStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Program.ExportDoc(Program.zip.zipFilePath, "IMGs");
+        }
+
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // Get the selected indices and sort them
