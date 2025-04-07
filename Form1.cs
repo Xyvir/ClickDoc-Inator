@@ -33,7 +33,15 @@ namespace Better_Steps_Recorder
             Listbox_Events.KeyDown += new KeyEventHandler(ListBox1_KeyDown);
 
             // Initialize NHunspell
-            _hunspell = new Hunspell("en_US.aff", "en_US.dic");
+            try
+            {
+                InitializeHunspell();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("An error occurred during initialization: " + ex.Message, "Initialization Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
 
             // Initialize context menu
             _contextMenu = new ContextMenuStrip();
@@ -64,7 +72,13 @@ namespace Better_Steps_Recorder
             RegisterHotKey(this.Handle, HOTKEY_ID_MOVE_DOWN, 0x0001, (uint)Keys.Down); // ALT + Down
         }
 
- 
+
+        private void InitializeHunspell()
+        {
+            _hunspell = new Hunspell("en_US.aff", "en_US.dic");
+        }
+
+
         private void RichTextBox_stepText_MouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)

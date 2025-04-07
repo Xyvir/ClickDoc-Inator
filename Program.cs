@@ -397,6 +397,7 @@ namespace Better_Steps_Recorder
                     // Create a new folder for images if exporting to Markdown
                     string imageFolderName = $"{fileNameWithoutExtension}-img";
                     string imageFolderPath = Path.Combine(Path.GetDirectoryName(docPath), imageFolderName);
+
                     if (kind == "MD")
                     {
                         if (Directory.Exists(imageFolderPath))
@@ -528,6 +529,8 @@ namespace Better_Steps_Recorder
                                                     writer.WriteLine(rtfImage);
                                                 }
                                                 break;
+                                        
+                                            // If adding additional img export cases do not forget to update the logic in GetRTFImage as 'kind' is passed there too.
                                         }
                                     }
                                 }
@@ -613,7 +616,7 @@ namespace Better_Steps_Recorder
                     MemoryStream stream = new MemoryStream();
                     croppedBitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
 
-                    if (kind == "MD")
+                    if (kind == "MD" || kind == "IMGs")
                     {
                         // Return the stream immediately for MD
                         return stream;
