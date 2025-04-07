@@ -928,7 +928,9 @@ namespace Better_Steps_Recorder
                 // Add the new event to the list and update the UI
                 Program._recordEvents.Add(newEvent);
                 AddRecordEventToListBox(newEvent);
+                UpdateListItems();
                 EnableDisable_exportToolStripMenuItem();
+                          
             }
         }
 
