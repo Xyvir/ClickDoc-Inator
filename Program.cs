@@ -423,7 +423,39 @@ namespace Better_Steps_Recorder
                     foreach (var recordEvent in Program._recordEvents)
                     {
                         //generate display step number
-                        string displayStep = stepNumber < 10 ? $"0{stepNumber}" : stepNumber.ToString();
+                        string filenameStep = stepNumber < 10 ? $"0{stepNumber}" : stepNumber.ToString();
+                        string printStep;
+                        string tmpStepText;
+
+                                if (recordEvent._StepText.Contains("::"))
+                                {
+             
+
+                                    
+                                    // Extract text up to "::" and append ":"
+                                    int delimiterIndex = recordEvent._StepText.IndexOf("::");
+                                    printStep = recordEvent._StepText.Substring(0, delimiterIndex);
+                                    
+                                    // Add Callout to Filname
+                                    filenameStep += printStep;
+
+                                    printStep += ":";
+
+                                    // Extract the remaining text after "::"
+                                    tmpStepText = recordEvent._StepText.Substring(delimiterIndex + 2);
+
+                                   
+
+                                }
+                                else
+                                {
+                                     // Default behavior if "::" is not found
+                                     printStep = $"#{stepNumber}";
+                                     tmpStepText = recordEvent._StepText;
+
+                                     // Increment stepNumber
+                                     stepNumber++;
+                                 }
 
                         // Write the step number and text
                         switch (kind)
@@ -433,27 +465,8 @@ namespace Better_Steps_Recorder
                                 break;
 
                             case "MD":
-                                // Determine printStep and tmpStepText based on the presence of "::"
-                                string printStep, tmpStepText;
+                             
 
-                                if (recordEvent._StepText.Contains("::"))
-                                {
-                                    // Extract text up to "::" and append ":"
-                                    int delimiterIndex = recordEvent._StepText.IndexOf("::");
-                                    printStep = recordEvent._StepText.Substring(0, delimiterIndex) + ":";
-
-                                    // Extract the remaining text after "::"
-                                    tmpStepText = recordEvent._StepText.Substring(delimiterIndex + 2);
-                                }
-                                else
-                                {
-                                    // Default behavior if "::" is not found
-                                    printStep = $"#{stepNumber}";
-                                    tmpStepText = recordEvent._StepText;
-
-                                    // Increment stepNumber
-                                    stepNumber++;
-                                }
 
                                 // Define the image filename and path
                                 string imageFilename;
@@ -461,7 +474,7 @@ namespace Better_Steps_Recorder
 
                                 if (recordEvent.Screenshotb64.StartsWith("iVBO"))
                                 {
-                                    imageFilename = $"{displayStep}-{fileNameWithoutExtension}.png";
+                                    imageFilename = $"{filenameStep}-{fileNameWithoutExtension}.png";
                                     imageFullPath = $"{imageFolderName}/{imageFilename}";
                                 }
                                 else
@@ -511,7 +524,7 @@ namespace Better_Steps_Recorder
 
                                             case "MD":
                                                 // Save the image to a file in the subdirectory
-                                                string imageFilename = $"{displayStep}-{fileNameWithoutExtension}.png";
+                                                string imageFilename = $"{filenameStep}-{fileNameWithoutExtension}.png";
                                                 string imageFullPath = Path.Combine(imageFolderPath, imageFilename);
                                                 using (FileStream fileStream = new FileStream(imageFullPath, FileMode.Create, FileAccess.Write))
                                                 {
