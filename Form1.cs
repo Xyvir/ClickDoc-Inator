@@ -19,6 +19,7 @@ namespace Better_Steps_Recorder
         private const int WM_HOTKEY = 0x0312;
         private const int HOTKEY_ID_MOVE_UP = 1;
         private const int HOTKEY_ID_MOVE_DOWN = 2;
+        private const int HOTKEY_ID_DELETE_STEP = 3; // Unique ID for Alt + Delete
 
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
@@ -124,7 +125,7 @@ namespace Better_Steps_Recorder
                 {
                     // Apply background formatting to the misspelled word
                     richTextBox_stepText.Select(wordStartIndex, word.Length);
-                    richTextBox_stepText.SelectionBackColor = Color.LightYellow;
+                    richTextBox_stepText.SelectionBackColor = Color.Yellow;
                 }
 
                 // Advance the startIndex to avoid highlighting the same word multiple times
@@ -210,6 +211,11 @@ namespace Better_Steps_Recorder
                 {
                     MoveSelectedEventDown();
                 }
+                else if (id == HOTKEY_ID_DELETE_STEP)
+                {
+                    // Call the delete logic
+                    deleteToolStripMenuItem_Click(this, EventArgs.Empty);
+                }
             }
             base.WndProc(ref m);
         }
@@ -248,6 +254,7 @@ namespace Better_Steps_Recorder
         {
             UnregisterHotKey(this.Handle, HOTKEY_ID_MOVE_UP);
             UnregisterHotKey(this.Handle, HOTKEY_ID_MOVE_DOWN);
+            UnregisterHotKey(this.Handle, HOTKEY_ID_DELETE_STEP); // Unregister Alt + Delete
             base.OnFormClosing(e);
         }
 
@@ -413,6 +420,7 @@ namespace Better_Steps_Recorder
         }
         private void ListBox1_KeyDown(object sender, KeyEventArgs e)
         {
+            RegisterHotKey(this.Handle, HOTKEY_ID_DELETE_STEP, 0x0001, (uint)Keys.Delete); // ALT + Delete
             // Check if the Delete key was pressed
             if (e.KeyCode == Keys.Delete)
             {
@@ -885,43 +893,75 @@ namespace Better_Steps_Recorder
 
         private void newExternalImageStepStripMenuItem_Click(object sender, EventArgs e)
         {
-            string prompt = "Please enter relative path, for example \"foo/bar.png\" without quotes";
-            string title = "Enter Relative Path";
-            string defaultValue = "shared/";
+            // Get the directory of the currently loaded steps file
+            string currentDirectory = Path.GetDirectoryName(Program.zip?.zipFilePath);
 
-            // Show the InputBox and get the user input
-            string relativePath = Interaction.InputBox(prompt, title, defaultValue);
-
-            if (!string.IsNullOrEmpty(relativePath))
+            if (string.IsNullOrEmpty(currentDirectory))
             {
-                // Create a new RecordEvent with the specified properties
-                var newEvent = new RecordEvent
-                {
-                    Step = Program._recordEvents.Count + 1,
-                    Screenshotb64 = relativePath,
-                    ID = Guid.NewGuid(),
-                    CreationTime = DateTime.Now,
-                    WindowTitle = " ",
-                    ApplicationName = " ",
-                    WindowCoordinates = new WindowHelper.RECT(),
-                    WindowSize = new WindowHelper.Size(),
-                    UICoordinates = new WindowHelper.RECT(),
-                    UISize = new WindowHelper.Size(),
-                    MouseCoordinates = new WindowHelper.POINT(),
-                    OGMouseCoordinates = new WindowHelper.POINT(),
-                    TooltipText = " ",
-                    EventType = " ",
-                    _StepText = " ",
-                    ElementName = " ",
-                    ElementType = " "
-                };
+                MessageBox.Show("No steps file is currently loaded. Please load a steps file first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-                // Add the new event to the list and update the UI
-                Program._recordEvents.Add(newEvent);
-                AddRecordEventToListBox(newEvent);
-                UpdateListItems();
-                EnableDisable_exportToolStripMenuItem();
-                          
+            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            {
+                // Set the initial directory to the loaded steps file directory
+                openFileDialog.InitialDirectory = currentDirectory;
+
+                // Allow multiple file selection
+                openFileDialog.Multiselect = true;
+
+                // Filter for image files
+                openFileDialog.Filter = "Image Files (*.png;*.jpg;*.jpeg;*.bmp)|*.png;*.jpg;*.jpeg;*.bmp|All Files (*.*)|*.*";
+
+                // Prevent navigating above the current directory
+                openFileDialog.RestoreDirectory = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (string fullPath in openFileDialog.FileNames)
+                    {
+                        // Ensure the selected file is within the current directory
+                        if (fullPath.StartsWith(currentDirectory, StringComparison.OrdinalIgnoreCase))
+                        {
+                            // Get the relative path
+                            string relativePath = Path.GetRelativePath(currentDirectory, fullPath);
+
+                            // Create a new RecordEvent with the specified properties
+                            var newEvent = new RecordEvent
+                            {
+                                Step = Program._recordEvents.Count + 1,
+                                Screenshotb64 = relativePath,
+                                ID = Guid.NewGuid(),
+                                CreationTime = DateTime.Now,
+                                WindowTitle = " ",
+                                ApplicationName = " ",
+                                WindowCoordinates = new WindowHelper.RECT(),
+                                WindowSize = new WindowHelper.Size(),
+                                UICoordinates = new WindowHelper.RECT(),
+                                UISize = new WindowHelper.Size(),
+                                MouseCoordinates = new WindowHelper.POINT(),
+                                OGMouseCoordinates = new WindowHelper.POINT(),
+                                TooltipText = " ",
+                                EventType = " ",
+                                _StepText = relativePath,
+                                ElementName = " ",
+                                ElementType = " "
+                            };
+
+                            // Add the new event to the list and update the UI
+                            Program._recordEvents.Add(newEvent);
+                            AddRecordEventToListBox(newEvent);
+                        }
+                        else
+                        {
+                            MessageBox.Show($"The file '{fullPath}' is outside the current directory and will be skipped.", "Invalid Selection", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+
+                    // Update the UI after processing all files
+                    UpdateListItems();
+                    EnableDisable_exportToolStripMenuItem();
+                }
             }
         }
 

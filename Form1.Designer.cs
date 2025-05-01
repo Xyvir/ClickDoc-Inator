@@ -101,7 +101,7 @@
             // 
             newExternalImageStepStripMenuItem.Name = "newExternalImageStepStripMenuItem";
             newExternalImageStepStripMenuItem.Size = new Size(158, 24);
-            newExternalImageStepStripMenuItem.Text = "New External Image Step";
+            newExternalImageStepStripMenuItem.Text = "New External Image Step(s)";
             newExternalImageStepStripMenuItem.Click += newExternalImageStepStripMenuItem_Click;
 
             // 
