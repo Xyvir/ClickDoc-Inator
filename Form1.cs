@@ -640,19 +640,10 @@ namespace Better_Steps_Recorder
                 // Check if the filename contains "template" (case insensitive)
                 if (Path.GetFileName(zipFilePath).IndexOf("template", StringComparison.OrdinalIgnoreCase) >= 0)
                 {
-                    // Show the "Save As" dialog
-                    string newZipFilePath = FileDialogHelper.ShowSaveFileDialog();
-                    if (newZipFilePath != null && newZipFilePath != "")
-                    {
-                        // Save the loaded file to the new path
-                        Program.zip.SaveToZip();
-
-                        // Update the title bar text with the new file path
-                        UpdateTitleBar(newZipFilePath);
+            toolStripMenuItem1_SaveAs_Click(sender, e); // Delegate to the Save As logic
                     }
                 }
             }
-        }
 
         private void richTextBox_stepText_TextChanged(object sender, EventArgs e)
         {
@@ -1141,6 +1132,53 @@ namespace Better_Steps_Recorder
             string parentFolder = Path.GetFileName(Path.GetDirectoryName(filePath));
             string fileName = Path.GetFileName(filePath);
             this.Text = $"ClickDoc-Inator - ...\\{parentFolder}\\{fileName}";
+        }
+        private void cloneStepToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Listbox_Events.SelectedItems.Count > 0)
+            {
+                // Create a list to store the cloned events
+                List<RecordEvent> clonedEvents = new List<RecordEvent>();
+
+                foreach (var item in Listbox_Events.SelectedItems)
+                {
+                    if (item is RecordEvent selectedEvent)
+                    {
+                        // Create a deep copy of the selected event
+                        var clonedEvent = new RecordEvent
+                        {
+                            Step = Program._recordEvents.Count + 1,
+                            Screenshotb64 = selectedEvent.Screenshotb64,
+                            ID = Guid.NewGuid(), // Assign a new unique ID
+                            CreationTime = DateTime.Now,
+                            WindowTitle = selectedEvent.WindowTitle,
+                            ApplicationName = selectedEvent.ApplicationName,
+                            WindowCoordinates = selectedEvent.WindowCoordinates,
+                            WindowSize = selectedEvent.WindowSize,
+                            UICoordinates = selectedEvent.UICoordinates,
+                            UISize = selectedEvent.UISize,
+                            MouseCoordinates = selectedEvent.MouseCoordinates,
+                            OGMouseCoordinates = selectedEvent.OGMouseCoordinates,
+                            TooltipText = selectedEvent.TooltipText,
+                            EventType = selectedEvent.EventType,
+                            _StepText = selectedEvent._StepText,
+                            ElementName = selectedEvent.ElementName,
+                            ElementType = selectedEvent.ElementType
+                        };
+
+                        clonedEvents.Add(clonedEvent);
+                    }
+                }
+
+                // Add the cloned events to the list and update the UI
+                foreach (var clonedEvent in clonedEvents)
+                {
+                    Program._recordEvents.Add(clonedEvent);
+                    AddRecordEventToListBox(clonedEvent);
+                }
+
+                UpdateListItems();
+            }
         }
     }
 }

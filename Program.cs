@@ -509,8 +509,8 @@ namespace Better_Steps_Recorder
                                                 ? recordEvent._StepText.Substring(0, 25) 
                                                 : recordEvent._StepText;
 
-                                                // Replace spaces with underscores
-                                                stepTextImgName = stepTextImgName.Replace(" ", "_");
+                                                // Replace spaces with underscores and force lowercase
+                                                stepTextImgName = stepTextImgName.Replace(" ", "_").ToLower();
 
 
                                                 // Save the image to a file in the subdirectory

@@ -109,6 +109,18 @@
             // 
             exportImageStepStripMenuItem.Name = "exportImageStepStripMenuItem";
             exportImageStepStripMenuItem.Size = new Size(158, 24);
+            // Add this above the "Move Up" menu item
+            ToolStripMenuItem cloneStepToolStripMenuItem;
+
+            // Initialize the "Clone Step" menu item
+            cloneStepToolStripMenuItem = new ToolStripMenuItem();
+            cloneStepToolStripMenuItem.Name = "cloneStepToolStripMenuItem";
+            cloneStepToolStripMenuItem.Size = new Size(158, 24);
+            cloneStepToolStripMenuItem.Text = "Clone Step";
+            cloneStepToolStripMenuItem.Click += cloneStepToolStripMenuItem_Click;
+
+            // Add the new menu item to the context menu
+            contextMenu_ListBox_Events.Items.Insert(1, cloneStepToolStripMenuItem);
             exportImageStepStripMenuItem.Text = "Export All Images; Named via StepText";
             exportImageStepStripMenuItem.Click += exportImageStepStripMenuItem_Click;
 
