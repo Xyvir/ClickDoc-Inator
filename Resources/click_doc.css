@@ -5,39 +5,96 @@
 body {
     font-family: 'Atkinson Hyperlegible', sans-serif;
     margin: 0; /* Remove default margins */
-    padding: 0 25%; /* Add 33% padding on left and right */
+    padding: 0 25%; /* Add 25% padding on left and right */
     box-sizing: border-box; /* Ensure padding doesn't affect table width */
+}
+
+@media print {
+    /* Sets the default properties for the printed page itself */
+    @page {
+        size: landscape;
+        margin: 0.50in; /* ADDED: Creates a 0.75-inch border on all sides of the paper */
+    }
+
+    /* Overrides screen styles for the body to remove side padding */
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+	   /*
+      NEW: This rule reduces the top and bottom padding of all cells
+      from 10px to 2px, making each row shorter.
+    */
+    td, th {
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    /* "Glues" a title row to the content row that follows it */
+    tbody tr:nth-child(2n+1) {
+        page-break-after: avoid;
+    }
+	
+	
+	
+}
+
+/* Round Image Corners & add shadow and fix width*/
+img {
+    border-radius: 10px;
+    box-shadow: 3px 3px 5px 3px #888888;
+    width: 325px;  
+    height: auto;    
 }
 
 /* Ensure the table takes full width of the available space */
 table {
     border-collapse: collapse;
-    border-spacing: 1 10px; /* Creates slight separation between row bubbles */
+    border-spacing: 1 8px; /* Creates slight separation between row bubbles */
     width: 100%; /* Keep table width at 100% of the available space */
     margin: auto; /* Center the table horizontally */
+    table-layout: fixed; /* MODIFIED: Added to prevent column resizing for bleed effect */
 }
 
 td {
-    padding: 10px;
+    padding: 8px;
 }
 
 /* Format <thead> */
 thead tr th {
-    font-size: 32px;
+    font-size: 28px;
     text-align: right;
+}
+
+/* NEW: Style for the main title to "bleed" outside its cell */
+thead th:first-child {
+    white-space: nowrap;
+    overflow: visible;
 }
 
 /* Style for odd rows (1st, 3rd, 5th, etc.) */
 tbody tr:nth-child(2n+1) {
+    text-align: left !important;
     font-size: 64px; /* Medium Large text */
     border-top: 2px solid #000; /* Add a top border line */
+}
+
+/* NEW: Style for the title cells in odd rows to "bleed" */
+tbody tr:nth-child(2n+1) td:first-child {
+    white-space: nowrap;
+    overflow: visible;
 }
 
 /* Style for even rows (2nd, 4th, 6th, etc.) */
 tbody tr:nth-child(2n+2) {
     font-size: 18px;
-	text-align: right;	
-    border-bottom: 2px solid #000; /* Add a top border line */
+    text-align: right;
+    border-bottom: 2px solid #000; /* Add a bottom border line */
     /* Default normal text */
-    /* Rounded edges at the bottom */
+}
+
+/* This rule correctly targets the cell and left-aligns its content (the image) */
+tbody tr:nth-child(2n+2) td:nth-child(2) {
+    text-align: left;
 }
