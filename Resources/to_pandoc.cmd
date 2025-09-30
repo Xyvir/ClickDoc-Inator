@@ -1,0 +1,1 @@
+@echo off & pandoc -t html "htmlhead.md" "%1" -o "%~n1.html"
