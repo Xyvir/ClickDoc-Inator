@@ -51,14 +51,14 @@ img {
 /* Ensure the table takes full width of the available space */
 table {
     border-collapse: collapse;
-    border-spacing: 1 8px; /* Creates slight separation between row bubbles */
+    border-spacing: 1 6px; /* Creates slight separation between row bubbles */
     width: 100%; /* Keep table width at 100% of the available space */
     margin: auto; /* Center the table horizontally */
     table-layout: fixed; /* MODIFIED: Added to prevent column resizing for bleed effect */
 }
 
 td {
-    padding: 8px;
+    padding: 6px;
 }
 
 /* Format <thead> */
@@ -76,7 +76,7 @@ thead th:first-child {
 /* Style for odd rows (1st, 3rd, 5th, etc.) */
 tbody tr:nth-child(2n+1) {
     text-align: left !important;
-    font-size: 64px; /* Medium Large text */
+    font-size: 52px; /* Medium Large text */
     border-top: 2px solid #000; /* Add a top border line */
 }
 
@@ -97,4 +97,8 @@ tbody tr:nth-child(2n+2) {
 /* This rule correctly targets the cell and left-aligns its content (the image) */
 tbody tr:nth-child(2n+2) td:nth-child(2) {
     text-align: left;
+}
+
+tbody tr:last-child {
+    border-bottom: none !important;
 }
