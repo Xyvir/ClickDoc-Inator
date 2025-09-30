@@ -6,9 +6,10 @@ The release binaries are large because they have .net8 included so no extra down
 ## Recommended Workflows
 Export to MD then you can convert to PDF or HTML with Pandoc. Style HTML with CSS (example style.css include)
 
-Export to MD then host in github pages, possibly use custom themes like Just the Docs. 
+Export to MD then host in github pages, possibly use custom Jekyll themes like Just the Docs or MkDocs. 
 
 
 ## Developing
 1. Clone Repo
 2. Open .csproj in VisualStudio 2022 to start vibe-coding.
+
